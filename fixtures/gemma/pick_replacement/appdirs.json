@@ -1,0 +1,12 @@
+{
+ "action": "replace",
+ "replacement": "platformdirs",
+ "target_spec": "platformdirs>=4",
+ "reasoning": "platformdirs is the maintained fork of appdirs and keeps user_cache_dir with the same signature, so cache.py needs a one-line import change.",
+ "alternatives": [
+  {
+   "name": "hard-coded ~/.cache path",
+   "why_not": "breaks macOS and Windows conventions"
+  }
+ ]
+}

@@ -1,0 +1,13 @@
+{
+ "gaps": [],
+ "concerns": [
+  "Jinja2 3 changed some autoescape defaults for unknown extensions; the status template uses .j2, which select_autoescape already covers."
+ ],
+ "suggested_tests": [
+  {
+   "name": "test_report_escapes_html_in_titles",
+   "purpose": "Check a site title containing <script> is escaped in the page",
+   "code": "def test_report_escapes_html_in_titles(tmp_path, monkeypatch):\n    ..."
+  }
+ ]
+}

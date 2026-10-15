@@ -1,0 +1,20 @@
+{
+ "steps": [
+  "Raise the Jinja2 pin from 2.11.3 to >=3.1,<4 in requirements.txt and pyproject.toml",
+  "No code changes: Environment, FileSystemLoader and select_autoescape behave the same in 3.1"
+ ],
+ "edits": [
+  {
+   "file": "requirements.txt",
+   "find": "Jinja2==2.11.3",
+   "replace": "Jinja2>=3.1,<4",
+   "reason": "upgrade pin"
+  },
+  {
+   "file": "pyproject.toml",
+   "find": "    \"Jinja2==2.11.3\",",
+   "replace": "    \"Jinja2>=3.1,<4\",",
+   "reason": "keep declarations consistent"
+  }
+ ]
+}

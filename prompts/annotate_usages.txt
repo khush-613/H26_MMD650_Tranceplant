@@ -1,0 +1,8 @@
+You are reviewing how a Python repository uses the dependency "$package" before it is replaced (planned replacement: $replacement).
+
+For each usage below, write one short sentence on why it matters for the swap: what could break, what has to change, or why it is harmless. Pay special attention to aliased imports, private functions (names starting with "_"), monkeypatches done at import time and hidden partner libraries, because a plain text search misses them.
+
+Return exactly one note per usage, using its [n] number as "index".
+
+Usages:
+$usages

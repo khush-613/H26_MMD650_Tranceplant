@@ -1,0 +1,23 @@
+You are repairing a dependency migration that broke tests. This is repair round $round of $max_rounds.
+
+Migration: "$package" -> $replacement (declared as: $target_spec)
+
+The patch applied so far (against the original repository):
+$current_patch
+
+After this patch, these tests failed but passed before the migration (or the sandbox setup failed):
+$failing_tests
+
+End of the donor sandbox log:
+$test_log
+
+First write a short diagnosis of what went wrong. Then write edits that fix it. The edits apply on top of the files AS THEY ARE NOW (after the patch), shown below.
+
+Rules:
+1. "find" must be copied character for character from the current file contents below and must appear exactly once in that file.
+2. Fix the cause, not the symptom: do not delete, skip or weaken tests, and do not undo the migration back to "$package".
+3. Keep edits minimal.
+4. File paths are relative to the repository root, exactly as shown in the FILE headers.
+
+Current repository files:
+$files

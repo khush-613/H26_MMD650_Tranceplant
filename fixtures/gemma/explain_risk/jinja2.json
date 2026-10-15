@@ -1,0 +1,8 @@
+{
+ "summary": "Jinja2 2.11.3 imports soft_unicode from MarkupSafe, which MarkupSafe 2.1 removed, so the report test already fails with the MarkupSafe pip installs today. The 2.x line also no longer receives fixes.",
+ "severity": "high",
+ "key_factors": [
+  "test_report_renders_all_sites fails with ImportError",
+  "2.11.x is end of life"
+ ]
+}

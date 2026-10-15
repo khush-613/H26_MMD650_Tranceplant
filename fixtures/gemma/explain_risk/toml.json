@@ -1,0 +1,8 @@
+{
+ "summary": "The toml package has had no release since 2020 and only supports TOML 0.5. Python 3.11+ ships tomllib, which reads TOML 1.0 with no extra dependency.",
+ "severity": "medium",
+ "key_factors": [
+  "no release since 2020",
+  "stdlib tomllib exists on 3.11+"
+ ]
+}

@@ -1,0 +1,16 @@
+{
+ "action": "stdlib",
+ "replacement": "tomllib",
+ "target_spec": null,
+ "reasoning": "config.py only calls toml.load on a file path. tomllib.load does the same job from the standard library, but needs the file opened in binary mode. tomllib only exists on Python 3.11+, while pyproject.toml still allows 3.10, so the support range must be raised or a tomli fallback added.",
+ "alternatives": [
+  {
+   "name": "tomli",
+   "why_not": "works on 3.10 but keeps a third-party dependency"
+  },
+  {
+   "name": "tomlkit",
+   "why_not": "heavier; only needed for round-trip editing"
+  }
+ ]
+}

@@ -1,0 +1,8 @@
+{
+ "summary": "appdirs is deprecated by its own maintainers in favour of platformdirs and gets no new platform fixes.",
+ "severity": "medium",
+ "key_factors": [
+  "deprecated upstream",
+  "platformdirs is the maintained fork"
+ ]
+}

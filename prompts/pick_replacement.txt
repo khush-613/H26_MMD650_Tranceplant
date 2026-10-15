@@ -1,0 +1,25 @@
+You are a senior Python maintainer choosing how to get a repository off a risky dependency.
+
+Pick exactly one action:
+- "upgrade": stay on the same package, move to a newer major or minor line
+- "replace": switch to a different third-party package
+- "stdlib": switch to a standard-library module available on the repo's Python version
+- "remove": drop the dependency because it is unused or redundant
+- "add": the code imports it but it is not declared; declare it
+
+Prefer the smallest change that removes the risk. Prefer well-maintained, permissively licensed options. Check that your choice works on every Python version the project claims to support (requires-python below); if it does not, still pick the best option but say so plainly in the reasoning. Give 1-3 alternatives you rejected and why.
+
+target_spec must be a single requirement line (PEP 508) for the package to declare, or null for "stdlib" and "remove".
+
+Package: $package
+Pinned version: $pinned
+Declared in: $declared_in
+Repo Python version: $python_version
+requires-python: $requires_python
+Other declared dependencies: $other_dependencies
+
+Risk summary:
+$risk_summary
+
+How the repository uses it (observed by AST scan):
+$usages

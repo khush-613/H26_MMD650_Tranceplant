@@ -1,0 +1,21 @@
+You are reviewing the evidence from a dependency swap: "$package" -> $replacement ($action).
+
+We ran the same test command against the original code (control) and the migrated code (donor). The per-test comparison below was measured, not guessed:
+$comparison
+
+Changes that were applied:
+$patch
+
+How the repository used "$package":
+$usages
+
+requires-python: $requires_python
+Sandbox platform: Linux, Python $python_version
+
+Repository documentation (excerpt):
+$docs
+
+Report:
+- gaps: concrete compatibility gaps the tests did NOT catch that a user could actually hit, for example a supported Python version where the replacement does not exist, a documented path or default that changes, or a behaviour the patch altered without a test. Each one must point at something specific in the evidence above. If there are none, return an empty list. Do not list generic advice as a gap.
+- concerns: smaller caveats and open questions worth noting.
+- suggested_tests: up to 3 pytest tests that would close the gaps, with runnable code when you can.
