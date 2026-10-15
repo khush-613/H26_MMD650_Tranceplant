@@ -86,9 +86,14 @@ def load(capsule_dir):
 # --- stubs and errors -------------------------------------------------------
 
 
+def _stub(*args, **kwargs):
+    raise NotImplementedError("skeleton stub")
+
+
 @pytest.mark.parametrize("args", [["scan", "{repo}"], ["xray", "{repo}", "requests"], ["trial", "{repo}", "jinja2"],
                                   ["run", "{repo}", "--all"]])
-def test_skeleton_stubs_give_a_clear_message(linkwatch, args):
+def test_skeleton_stubs_give_a_clear_message(linkwatch, monkeypatch, args):
+    install_stages(monkeypatch, scan={"scan_repo": _stub}, xray={"find_usages": _stub})
     result = invoke(*[a.format(repo=linkwatch) for a in args])
     assert result.exit_code == 1
     assert "still a stub (owner: Khush)" in result.output

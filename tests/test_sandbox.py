@@ -271,3 +271,11 @@ def test_real_install_failure_on_both_backends(tmp_path, needs_uv):
         run = run_side(repo, "donor", patch=None, evidence_dir=tmp_path / b, label="donor", backend=b)
         assert run.setup_ok is False and run.results == [], b
         assert "99.0.0" in (tmp_path / b / "donor.log").read_text(), b
+
+
+def test_bind_mount_gets_selinux_label_only_when_enforcing(tmp_path, monkeypatch):
+    for enforcing, mode in ((False, "rw"), (True, "rw,z")):
+        monkeypatch.setattr(sandbox, "_selinux_enforcing", lambda e=enforcing: e)
+        run, client, _ = _docker_side(tmp_path / mode, monkeypatch, FakeContainer())
+        repo_mount = [v for v in client.runs[0]["volumes"].values() if v["bind"] == "/workspace"][0]
+        assert repo_mount["mode"] == mode

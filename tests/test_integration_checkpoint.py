@@ -1,21 +1,17 @@
 """Checkpoint 2: jinja2 through all six stages with the real scan, xray and capsule.
 
-sandbox and compare are the stand-ins from helpers.py until Rajveer's modules
-land. Scan answers from the recorded API responses in fixtures/scan-cache and
+sandbox and compare are Rajveer's real modules. Scan answers from the recorded API responses in fixtures/scan-cache and
 Gemma from the saved replies, so the network is only used to install packages.
 """
 
 import os
 import shutil
-import subprocess
 from pathlib import Path
 
 import pytest
 from typer.testing import CliRunner
 
-import helpers
-from helpers import install_stages
-from tranceplant import cli
+from tranceplant import cli, sandbox
 from tranceplant.models import Capsule
 
 pytestmark = pytest.mark.integration
@@ -26,19 +22,8 @@ T_REPORT = "tests/test_report.py::test_report_renders_all_sites"
 
 @pytest.fixture(params=["docker", "uv"])
 def backend(request, monkeypatch, tmp_path, needs_uv):
-    if request.param == "docker":
-        if not helpers.docker_ready():
-            pytest.skip(f"docker or the {helpers.SANDBOX_IMAGE} image is not available")
-        run = subprocess.run
-
-        def with_selinux_labels(cmd, *args, **kwargs):
-            # SELinux in enforcing mode (Fedora) blocks host bind mounts unless they carry :z
-            if cmd and cmd[0] == "docker":
-                cmd = [f"{x}:z" if prev == "-v" and str(x).startswith("/") else x for prev, x in zip([None, *cmd], cmd)]
-            return run(cmd, *args, **kwargs)
-
-        monkeypatch.setattr(subprocess, "run", with_selinux_labels)
-    install_stages(monkeypatch, sandbox=helpers.STAGES["sandbox"], compare=helpers.STAGES["compare"])
+    if request.param == "docker" and not sandbox.docker_available():
+        pytest.skip("Docker is not running")
     shutil.copytree(FIXTURES / "scan-cache", tmp_path / "home" / "cache")
     monkeypatch.setenv("TRANCEPLANT_HOME", str(tmp_path / "home"))
     return request.param

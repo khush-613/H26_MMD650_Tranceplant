@@ -305,7 +305,7 @@ class _DockerRunner:
                 working_dir="/workspace",
                 environment={"UV_LINK_MODE": "copy", "UV_PYTHON_DOWNLOADS": "never"},
                 volumes={
-                    str(repo): {"bind": "/workspace", "mode": "rw"},
+                    str(repo): {"bind": "/workspace", "mode": "rw,z" if _selinux_enforcing() else "rw"},
                     UV_CACHE_VOLUME: {"bind": "/root/.cache/uv", "mode": "rw"},
                 },
                 network_mode="bridge",
@@ -460,6 +460,14 @@ def _format_command(command: Sequence[str], stdout: str, stderr: str) -> str:
     if not pieces[-1].endswith("\n"):
         pieces.append("\n")
     return "".join(pieces)
+
+
+def _selinux_enforcing() -> bool:
+    """SELinux in enforcing mode (e.g. Fedora) blocks bind mounts that lack the :z label."""
+    try:
+        return Path("/sys/fs/selinux/enforce").read_text().strip() == "1"
+    except OSError:
+        return False
 
 
 def _python_version(output: str) -> str | None:
