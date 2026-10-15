@@ -1,9 +1,8 @@
 """Test doubles.
 
-ScriptedBackend replays canned Gemma replies. The stand-in stages below follow
-the stage contracts in cli.py so the wiring can be tested before Khush's and
-Rajveer's modules are merged. They are deliberately simple and live only in
-tests; the real scan/xray/sandbox/compare/capsule modules replace them.
+ScriptedBackend replays canned Gemma replies. The stand-in scan/xray/capsule
+stages below follow the stage contracts in cli.py so the wiring can be tested
+before Khush's modules are merged; sandbox and compare are Rajveer's real ones.
 """
 
 from __future__ import annotations
@@ -16,20 +15,17 @@ import shutil
 import subprocess
 import sys
 import types
-import xml.etree.ElementTree as ET
 from pathlib import Path
 
 from packaging.utils import canonicalize_name
 
+from tranceplant import compare, sandbox
 from tranceplant.models import (
-    Comparison,
     Declaration,
     Dependency,
     DependencyRisk,
     RiskIndicators,
     ScanReport,
-    SideRun,
-    TestResult,
     Usage,
 )
 
@@ -131,111 +127,6 @@ def find_usages(repo: Path, dep: str) -> list[Usage]:
     return out
 
 
-def parse_junit(path: Path) -> list[TestResult]:
-    results = []
-    for case in ET.parse(path).getroot().iter("testcase"):
-        cls = case.get("classname", "")
-        name = f"{cls.replace('.', '/')}.py::{case.get('name')}"
-        outcome, message = "passed", ""
-        for tag in ("failure", "error", "skipped"):
-            el = case.find(tag)
-            if el is not None:
-                outcome = {"failure": "failed", "error": "error", "skipped": "skipped"}[tag]
-                message = el.get("message", "")
-                break
-        results.append(TestResult(name=name, outcome=outcome, duration=float(case.get("time", 0)), message=message))
-    return results
-
-
-SANDBOX_IMAGE = "tranceplant-sandbox"  # built from Dockerfile.sandbox
-SETUP_FAILED = 97
-
-
-def docker_ready() -> bool:
-    if not shutil.which("docker"):
-        return False
-    return subprocess.run(["docker", "image", "inspect", SANDBOX_IMAGE], capture_output=True).returncode == 0
-
-
-def run_side(repo, side, *, patch, evidence_dir, label, backend="uv") -> SideRun:
-    """backend="docker": one container per side. backend="uv": two local venvs, the doc's fallback."""
-    evidence_dir = Path(evidence_dir)
-    root = evidence_dir.parent
-    work = root / "work" / label
-    if work.exists():
-        shutil.rmtree(work)
-    shutil.copytree(repo, work, ignore=shutil.ignore_patterns(".git", ".venv", "__pycache__"))
-    log = evidence_dir / f"{label}.log"
-    junit = evidence_dir / f"{label}.junit.xml"
-    lines = []
-
-    def sh(cmd, **kw):
-        proc = subprocess.run(cmd, cwd=work, capture_output=True, text=True, **kw)
-        lines.append(f"$ {' '.join(map(str, cmd))}\n{proc.stdout}{proc.stderr}exit: {proc.returncode}\n")
-        return proc
-
-    setup_ok = True
-    if patch:
-        env = dict(os.environ, GIT_CEILING_DIRECTORIES=str(work.parent))
-        setup_ok = sh(["git", "apply", str(patch)], env=env).returncode == 0
-    reqs = [a for f in ("requirements.txt", "requirements-dev.txt") if (work / f).is_file() for a in ("-r", f)]
-    results, exit_code = [], None
-    if setup_ok and backend == "docker":
-        script = (
-            f"uv venv -q /tmp/venv --python python3.12 && uv pip install -q -p /tmp/venv {' '.join(reqs)} "
-            f"|| exit {SETUP_FAILED}; /tmp/venv/bin/python -c 'import platform; print(platform.platform())'; "
-            f"/tmp/venv/bin/python -m pytest -q -p no:cacheprovider --junitxml=/evidence/{label}.junit.xml"
-        )
-        proc = sh(["docker", "run", "--rm", "-v", f"{work}:/repo", "-v", f"{evidence_dir}:/evidence",
-                   "-v", "tranceplant-uv-cache:/root/.cache/uv", "-e", "UV_LINK_MODE=copy",
-                   "-e", "UV_PYTHON_DOWNLOADS=never", "-w", "/repo", SANDBOX_IMAGE, "sh", "-c", script])
-        setup_ok = proc.returncode != SETUP_FAILED
-        exit_code = proc.returncode if setup_ok else None
-    elif setup_ok:
-        setup_ok = sh(["uv", "venv", "-q", "--python", "3.12", ".venv"]).returncode == 0
-        if setup_ok:
-            setup_ok = sh(["uv", "pip", "install", "-q", "-p", ".venv", *reqs]).returncode == 0
-        if setup_ok:
-            exit_code = sh([".venv/bin/python", "-m", "pytest", "-q", "-p", "no:cacheprovider",
-                            f"--junitxml={junit}"]).returncode
-    if setup_ok and junit.is_file():
-        results = parse_junit(junit)
-    log.write_text("".join(lines))
-    return SideRun(
-        side=side, label=label, command="python -m pytest --junitxml", exit_code=exit_code, setup_ok=setup_ok,
-        results=results, junit_file=junit.relative_to(root).as_posix() if junit.is_file() else None,
-        log_file=log.relative_to(root).as_posix(), python_version="3.12", backend=backend,
-    )
-
-
-def compare(control: list[TestResult], donor: list[TestResult]) -> Comparison:
-    c = {r.name: r.outcome == "passed" for r in control}
-    d = {r.name: r.outcome == "passed" for r in donor}
-    out = Comparison()
-    for name in sorted(set(c) | set(d)):
-        if name not in d:
-            out.only_in_control.append(name)
-        elif name not in c:
-            out.only_in_donor.append(name)
-        elif c[name] and d[name]:
-            out.still_passing.append(name)
-        elif c[name]:
-            out.regressions.append(name)
-        elif d[name]:
-            out.newly_fixed.append(name)
-        else:
-            out.still_failing.append(name)
-    return out
-
-
-def decide_verdict(comparison: Comparison, gaps) -> str:
-    if comparison.regressions:
-        return "Rejected"
-    if any(g.status == "open" for g in gaps):
-        return "Partial"
-    return "Accepted"
-
-
 def write_capsule(capsule, capsule_dir: Path) -> Path:
     path = Path(capsule_dir) / "capsule.json"
     path.write_text(capsule.model_dump_json(indent=1))
@@ -245,7 +136,7 @@ def write_capsule(capsule, capsule_dir: Path) -> Path:
 STAGES = {
     "scan": {"scan_repo": scan_repo},
     "xray": {"find_usages": find_usages},
-    "sandbox": {"run_side": run_side},
-    "compare": {"compare": compare, "decide_verdict": decide_verdict},
+    "sandbox": {"run_side": sandbox.run_side},
+    "compare": {"compare": compare.compare, "decide_verdict": compare.decide_verdict},
     "capsule": {"write_capsule": write_capsule},
 }

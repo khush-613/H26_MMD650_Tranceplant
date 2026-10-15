@@ -204,7 +204,7 @@ def trial_pipeline(
     out: Path,
     *,
     python_version: str = "3.12",
-    backend: str = "docker",
+    backend: str = "auto",
     max_repairs: int = propose.MAX_REPAIR_ROUNDS,
     report: ScanReport | None = None,
     say: Callable[[str], None] = lambda msg: None,
@@ -419,7 +419,7 @@ def trial(
     dep: Annotated[str, typer.Argument(help="Dependency to transplant, e.g. jinja2.")],
     out: Annotated[Path, typer.Option(help="Where capsule folders go.")] = Path("capsules"),
     python: Annotated[str, typer.Option(help="Python version the repo targets.")] = "3.12",
-    backend: Annotated[str, typer.Option(help="Sandbox backend: docker or uv.")] = "docker",
+    backend: Annotated[str, typer.Option(help="Sandbox backend: auto (Docker if running, else uv), docker or uv.")] = "auto",
     max_repairs: Annotated[int, typer.Option(help="Gemma repair rounds after regressions (max 2).")] = 2,
 ):
     """Propose a replacement, run both sandboxes and write the capsule."""
@@ -437,7 +437,7 @@ def run_all(
     min_score: Annotated[int, typer.Option(help="Risk score threshold for --all.")] = 40,
     out: Annotated[Path, typer.Option(help="Where capsule folders go.")] = Path("capsules"),
     python: Annotated[str, typer.Option(help="Python version the repo targets.")] = "3.12",
-    backend: Annotated[str, typer.Option(help="Sandbox backend: docker or uv.")] = "docker",
+    backend: Annotated[str, typer.Option(help="Sandbox backend: auto (Docker if running, else uv), docker or uv.")] = "auto",
 ):
     """Run all six stages for every risky dependency."""
     repo = _repo(repo)

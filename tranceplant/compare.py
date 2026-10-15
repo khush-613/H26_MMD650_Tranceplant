@@ -1,175 +1,126 @@
-"""Compare pytest JUnit XML reports and calculate a rule-based verdict."""
+"""Stage 5: Compare. Owner: Rajveer.
+
+Per-test diff of control vs donor from pytest JUnit XML, and the verdict
+rules. No AI is involved here, so everything this module says is OBSERVED.
+
+  Accepted = zero regressions, no open gaps, and every test compared on both sides
+  Partial  = zero regressions, but an open gap or tests that only ran on one side
+  Rejected = at least one regression left after the repair rounds
+"""
 
 from __future__ import annotations
 
 import xml.etree.ElementTree as ET
 from collections import Counter
-from dataclasses import asdict, dataclass, field
 from pathlib import Path
 
+from .models import Comparison, Gap, Outcome, TestResult, Verdict
 
-@dataclass(frozen=True)
-class TestCaseResult:
-    test_id: str
-    status: str
-    duration_seconds: float | None = None
-    detail: str | None = None
+MAX_MESSAGE = 2000
 
 
-@dataclass(frozen=True)
-class TestChange:
-    test_id: str
-    control_status: str | None
-    donor_status: str | None
-    control_detail: str | None = None
-    donor_detail: str | None = None
+def parse_junit(path: str | Path, *, repo: str | Path | None = None) -> tuple[list[TestResult], list[str]]:
+    """Read one JUnit report. Returns the results and any problems reading it.
 
-
-@dataclass
-class Comparison:
-    still_passing: list[TestChange] = field(default_factory=list)
-    still_failing: list[TestChange] = field(default_factory=list)
-    newly_broken: list[TestChange] = field(default_factory=list)
-    newly_fixed: list[TestChange] = field(default_factory=list)
-    not_comparable: list[TestChange] = field(default_factory=list)
-    issues: list[str] = field(default_factory=list)
-    open_gaps: list[str] = field(default_factory=list)
-
-    @property
-    def verdict(self) -> str:
-        if self.newly_broken:
-            return "Rejected"
-        if self.open_gaps or self.not_comparable or self.issues:
-            return "Partial"
-        if not self.still_passing and not self.still_failing and not self.newly_fixed:
-            return "Partial"
-        return "Accepted"
-
-    def to_dict(self) -> dict[str, object]:
-        return {
-            "still_passing": [asdict(item) for item in self.still_passing],
-            "still_failing": [asdict(item) for item in self.still_failing],
-            "newly_broken": [asdict(item) for item in self.newly_broken],
-            "newly_fixed": [asdict(item) for item in self.newly_fixed],
-            "not_comparable": [asdict(item) for item in self.not_comparable],
-            "issues": list(self.issues),
-            "open_gaps": list(self.open_gaps),
-            "counts": self.counts,
-            "verdict": self.verdict,
-        }
-
-    @property
-    def counts(self) -> dict[str, int]:
-        return {
-            "still_passing": len(self.still_passing),
-            "still_failing": len(self.still_failing),
-            "newly_broken": len(self.newly_broken),
-            "newly_fixed": len(self.newly_fixed),
-            "not_comparable": len(self.not_comparable),
-        }
-
-
-def parse_junit(path: str | Path) -> tuple[dict[str, TestCaseResult], list[str]]:
-    """Read one JUnit report, preserving failure/error text as observed detail."""
-
+    With `repo`, names become pytest node ids (tests/test_x.py::test_y) by
+    finding the module file behind the dotted classname.
+    """
     report = Path(path)
     if not report.is_file():
-        return {}, [f"JUnit report is missing: {report}"]
+        return [], [f"JUnit report is missing: {report}"]
     try:
         root = ET.parse(report).getroot()
     except (ET.ParseError, OSError) as exc:
-        return {}, [f"Could not read JUnit report {report}: {exc}"]
+        return [], [f"Could not read JUnit report {report}: {exc}"]
 
-    results: dict[str, TestCaseResult] = {}
+    results: list[TestResult] = []
     seen: Counter[str] = Counter()
     for case in root.iter("testcase"):
-        name = case.attrib.get("name", "<unnamed>")
-        classname = case.attrib.get("classname", "")
-        base_id = f"{classname}::{name}" if classname else name
+        base_id = _node_id(case.attrib.get("classname", ""), case.attrib.get("name", "<unnamed>"), repo)
         seen[base_id] += 1
         test_id = base_id if seen[base_id] == 1 else f"{base_id}#{seen[base_id]}"
-        failure = case.find("failure")
-        error = case.find("error")
-        skipped = case.find("skipped")
-        marker = failure if failure is not None else error
-        if marker is not None:
-            status = "failed"
-            detail = _node_detail(marker)
+        failure, error, skipped = case.find("failure"), case.find("error"), case.find("skipped")
+        outcome: Outcome
+        if failure is not None:
+            outcome, detail = "failed", _node_detail(failure)
+        elif error is not None:
+            outcome, detail = "error", _node_detail(error)
         elif skipped is not None:
-            status = "skipped"
-            detail = _node_detail(skipped)
+            outcome, detail = "skipped", _node_detail(skipped)
         else:
-            status = "passed"
-            detail = None
-        duration = _float_or_none(case.attrib.get("time"))
-        results[test_id] = TestCaseResult(test_id, status, duration, detail)
+            outcome, detail = "passed", ""
+        results.append(TestResult(name=test_id, outcome=outcome, duration=_float(case.attrib.get("time")),
+                                  message=detail[:MAX_MESSAGE]))
     if not results:
-        return {}, [f"JUnit report contains no test cases: {report}"]
+        return [], [f"JUnit report contains no test cases: {report}"]
     return results, []
 
 
-def compare_junit(
-    control_xml: str | Path,
-    donor_xml: str | Path,
-    *,
-    open_gaps: list[str] | tuple[str, ...] = (),
-) -> Comparison:
-    """Classify each test as still passing/failing, newly broken/fixed.
-
-    Tests present on only one side are recorded separately as not comparable,
-    so a changed test collection cannot be mislabeled as a fix or regression.
+def compare(control: list[TestResult], donor: list[TestResult]) -> Comparison:
+    """Sort every test into one group. A skipped test counts as not passing:
+    a test that passed before and is skipped after the swap is a regression.
+    Tests present on only one side are kept apart, so a changed test
+    collection cannot be mislabelled as a fix or a regression.
     """
-
-    control, control_issues = parse_junit(control_xml)
-    donor, donor_issues = parse_junit(donor_xml)
-    result = Comparison(issues=control_issues + donor_issues, open_gaps=list(open_gaps))
-    for test_id in sorted(control.keys() | donor.keys()):
-        before = control.get(test_id)
-        after = donor.get(test_id)
-        change = TestChange(
-            test_id=test_id,
-            control_status=before.status if before else None,
-            donor_status=after.status if after else None,
-            control_detail=before.detail if before else None,
-            donor_detail=after.detail if after else None,
-        )
-        if (
-            before is None
-            or after is None
-            or before.status == "skipped"
-            or after.status == "skipped"
-        ):
-            result.not_comparable.append(change)
-        elif before.status == "passed" and after.status == "passed":
-            result.still_passing.append(change)
-        elif before.status == "passed" and after.status != "passed":
-            result.newly_broken.append(change)
-        elif before.status != "passed" and after.status == "passed":
-            result.newly_fixed.append(change)
+    before = {r.name: r.outcome == "passed" for r in control}
+    after = {r.name: r.outcome == "passed" for r in donor}
+    result = Comparison()
+    for name in sorted(before.keys() | after.keys()):
+        if name not in after:
+            result.only_in_control.append(name)
+        elif name not in before:
+            result.only_in_donor.append(name)
+        elif before[name] and after[name]:
+            result.still_passing.append(name)
+        elif before[name]:
+            result.regressions.append(name)
+        elif after[name]:
+            result.newly_fixed.append(name)
         else:
-            result.still_failing.append(change)
+            result.still_failing.append(name)
     return result
 
 
-def compare_runs(control: object, donor: object, *, open_gaps: list[str] | tuple[str, ...] = ()) -> Comparison:
-    """Convenience wrapper for ``TestRun`` objects returned by sandbox.py."""
+def decide_verdict(comparison: Comparison, gaps: list[Gap]) -> Verdict:
+    if comparison.regressions:
+        return "Rejected"
+    compared = comparison.still_passing + comparison.still_failing + comparison.newly_fixed
+    if any(g.status == "open" for g in gaps) or comparison.only_in_control or comparison.only_in_donor or not compared:
+        return "Partial"
+    return "Accepted"
 
-    control_path = getattr(control, "junit_xml", control)
-    donor_path = getattr(donor, "junit_xml", donor)
-    return compare_junit(control_path, donor_path, open_gaps=open_gaps)
+
+def compare_junit(control_xml: str | Path, donor_xml: str | Path, *, repo: str | Path | None = None) -> Comparison:
+    """Convenience: compare two JUnit files directly."""
+    control, _ = parse_junit(control_xml, repo=repo)
+    donor, _ = parse_junit(donor_xml, repo=repo)
+    return compare(control, donor)
 
 
-def _node_detail(node: ET.Element) -> str | None:
+def counts(comparison: Comparison) -> dict[str, int]:
+    return {k: len(v) for k, v in comparison.model_dump().items()}
+
+
+def _node_id(classname: str, name: str, repo: str | Path | None) -> str:
+    if not classname:
+        return name
+    parts = classname.split(".")
+    if repo is not None:
+        for i in range(len(parts), 0, -1):
+            module = "/".join(parts[:i]) + ".py"
+            if (Path(repo) / module).is_file():
+                return "::".join([module, *parts[i:], name])
+    return f"{classname}::{name}"
+
+
+def _node_detail(node: ET.Element) -> str:
     message = node.attrib.get("message", "").strip()
     body = (node.text or "").strip()
-    detail = "\n".join(part for part in (message, body) if part)
-    return detail or None
+    return "\n".join(part for part in (message, body) if part)
 
 
-def _float_or_none(value: str | None) -> float | None:
-    if value is None:
-        return None
+def _float(value: str | None) -> float:
     try:
-        return float(value)
+        return float(value) if value is not None else 0.0
     except ValueError:
-        return None
+        return 0.0

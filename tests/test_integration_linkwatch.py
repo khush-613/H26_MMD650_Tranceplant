@@ -1,7 +1,7 @@
 """End to end on the real LinkWatch repo: real uv sandboxes, real pytest, saved Gemma replies.
 
-The sandbox/compare/scan/xray here are the stand-ins from helpers.py (uv
-virtualenvs, the doc's Docker fallback), so this proves the wiring, the
+sandbox and compare are Rajveer's real modules; scan/xray/capsule are the
+stand-ins from helpers.py until Khush's land. This proves the wiring, the
 migration patches and the repair loop against LinkWatch's actual test suite.
 Each test runs twice: in uv virtualenvs and in Docker containers (tranceplant-sandbox image).
 Slow (~6 s per test run because of test_slow_is_up) and needs network for package installs.
@@ -16,7 +16,7 @@ from typer.testing import CliRunner
 
 import helpers
 from helpers import install_stages
-from tranceplant import cli
+from tranceplant import cli, sandbox
 from tranceplant.gemma import PROJECT_DIR
 from tranceplant.models import Capsule
 
@@ -28,8 +28,8 @@ T_CONFIG = "tests/test_config.py::test_sites_file_loads"
 
 @pytest.fixture(params=["uv", "docker"])
 def env(request, linkwatch, monkeypatch, tmp_path, needs_uv):
-    if request.param == "docker" and not helpers.docker_ready():
-        pytest.skip(f"docker or the {helpers.SANDBOX_IMAGE} image is not available")
+    if request.param == "docker" and not sandbox.docker_available():
+        pytest.skip("Docker is not running")
     monkeypatch.setattr(cli, "trial_backend", request.param, raising=False)
     install_stages(monkeypatch, **helpers.STAGES)
     monkeypatch.setattr(cli, "console", Console(width=250))
