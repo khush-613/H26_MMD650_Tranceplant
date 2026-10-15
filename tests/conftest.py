@@ -12,6 +12,7 @@ def _isolated_env(monkeypatch, tmp_path):
         monkeypatch.delenv(key, raising=False)
     monkeypatch.setenv("TRANCEPLANT_CACHE_DIR", str(tmp_path / "gemma-cache"))
     monkeypatch.setenv("TRANCEPLANT_GEMMA_RPM", "0")
+    monkeypatch.setenv("TRANCEPLANT_DOTENV", str(tmp_path / "no-such.env"))  # never read the developer's real key
 
 
 @pytest.fixture

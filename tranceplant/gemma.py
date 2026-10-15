@@ -38,6 +38,7 @@ MODEL_LARGE = os.environ.get("TRANCEPLANT_MODEL_LARGE", "gemma-4-31b-it")
 MODEL_SMALL = os.environ.get("TRANCEPLANT_MODEL_SMALL", "gemma-4-26b-a4b-it")
 
 RETRYABLE_STATUS = {429, 500, 502, 503, 504}
+MAX_OUTPUT_TOKENS_CAP = 65536
 
 
 class GemmaError(RuntimeError):
@@ -46,6 +47,10 @@ class GemmaError(RuntimeError):
 
 class GemmaCacheMiss(GemmaError):
     pass
+
+
+class GemmaTruncated(GemmaError):
+    """The model used its whole output budget (mostly thinking) before answering."""
 
 
 # --- Response models: the JSON shapes Gemma must return ---------------------
@@ -139,13 +144,15 @@ class Job:
 
 
 JOBS: dict[str, Job] = {
-    "explain_risk": Job("small", RiskExplanation, 0.3, 2048),
-    "annotate_usages": Job("small", UsageNotes, 0.3, 4096),
-    "pick_replacement": Job("large", ReplacementChoice, 0.2, 4096),
+    # Gemma 4 always thinks first and its thoughts count against max_output_tokens
+    # (the API rejects thinking_budget / thinking_level for Gemma), so leave room.
+    "explain_risk": Job("small", RiskExplanation, 0.3, 16384),
+    "annotate_usages": Job("small", UsageNotes, 0.3, 16384),
+    "pick_replacement": Job("large", ReplacementChoice, 0.2, 16384),
     "write_migration": Job("large", MigrationDraft, 0.1, 16384),
     "repair_migration": Job("large", RepairDraft, 0.1, 16384),
-    "explain_gaps": Job("small", GapReport, 0.3, 4096),
-    "ping": Job("small", Ping, 0.0, 256),
+    "explain_gaps": Job("small", GapReport, 0.3, 16384),
+    "ping": Job("small", Ping, 0.0, 4096),
 }
 
 
@@ -247,6 +254,8 @@ def response_text(response: Any) -> str:
         if texts:
             return "".join(texts)
         reason = getattr(candidates[0], "finish_reason", None)
+        if "MAX_TOKENS" in str(reason):
+            raise GemmaTruncated(f"Gemma returned no text (finish_reason={reason})")
         raise GemmaError(f"Gemma returned no text (finish_reason={reason})")
     text = getattr(response, "text", None)
     if text:
@@ -393,10 +402,11 @@ class GemmaClient:
         key = hashlib.sha256(
             json.dumps({"v": PROMPT_VERSION, "job": job, "model": model, "prompt": prompt}).encode()
         ).hexdigest()
-        self.models_used.add(model)
-
         if self.mode == "fake":
+            # Say so in the capsule: no model was called, a saved reply stood in for it.
+            self.models_used.add(f"{model} (saved fixture, not called)")
             return self._from_fixture(job, model, prompt, key, fixture_key, validate)
+        self.models_used.add(model)
 
         cached = self.cache.get(key)
         if cached is not None:
@@ -415,8 +425,14 @@ class GemmaClient:
 
         messages: list[Message] = [("user", prompt)]
         last_error: Exception | None = None
+        budget = spec.max_output_tokens
         for attempt in range(1, self.max_fix_attempts + 2):
-            raw = self._call(model, messages, spec)
+            try:
+                raw = self._call(model, messages, spec, budget)
+            except GemmaTruncated as exc:
+                last_error = exc
+                budget = min(budget * 2, MAX_OUTPUT_TOKENS_CAP)
+                continue
             try:
                 data = spec.schema.model_validate(extract_json(raw))
                 if validate:
@@ -446,7 +462,7 @@ class GemmaClient:
                 return GemmaResult(job, model, data, raw, prompt, key, "fake")
         raise GemmaCacheMiss(f"no fake Gemma fixture for job {job!r} (looked for {', '.join(map(str, candidates))})")
 
-    def _call(self, model: str, messages: list[Message], spec: Job) -> str:
+    def _call(self, model: str, messages: list[Message], spec: Job, max_output_tokens: int | None = None) -> str:
         delay = 2.0
         for attempt in range(self.max_api_retries + 1):
             wait = self._min_interval - (time.monotonic() - self._last_call)
@@ -455,7 +471,8 @@ class GemmaClient:
             self._last_call = time.monotonic()
             try:
                 self.api_calls += 1
-                return self.backend.generate(model, messages, spec.temperature, spec.max_output_tokens)
+                return self.backend.generate(model, messages, spec.temperature,
+                                             max_output_tokens or spec.max_output_tokens)
             except GemmaError:
                 raise
             except Exception as exc:  # SDK errors carry an HTTP status in .code

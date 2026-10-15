@@ -322,3 +322,36 @@ def test_real_sdk_error_type_is_retryable(tmp_path):
 def test_ping_in_fake_mode():
     assert GemmaClient("fake").ping().data.ok is True
 
+
+
+def test_reply_cut_off_while_thinking_is_retried_with_double_the_budget(tmp_path):
+    from tranceplant.gemma import GemmaTruncated
+
+    c, backend = client(tmp_path, GemmaTruncated("no text (MAX_TOKENS)"), GOOD_RISK)
+    assert c.run("explain_risk", RISK).data.severity == "high"
+    budgets = [call["max_output_tokens"] for call in backend.calls]
+    assert budgets == [JOBS["explain_risk"].max_output_tokens, 2 * JOBS["explain_risk"].max_output_tokens]
+    assert len(backend.calls[1]["messages"]) == 1, "a cut-off reply is not fed back as a bad answer"
+
+
+def test_truncation_keeps_failing_gives_up(tmp_path):
+    from tranceplant.gemma import GemmaTruncated
+
+    c, backend = client(tmp_path, *[GemmaTruncated("MAX_TOKENS")] * 3)
+    with pytest.raises(GemmaError, match="no usable reply"):
+        c.run("explain_risk", RISK)
+    assert [call["max_output_tokens"] for call in backend.calls][-1] <= gemma.MAX_OUTPUT_TOKENS_CAP
+
+
+def test_max_tokens_finish_raises_truncated():
+    from tranceplant.gemma import GemmaTruncated
+
+    with pytest.raises(GemmaTruncated):
+        response_text(_response(_part("thinking", True), finish="FinishReason.MAX_TOKENS"))
+
+
+def test_fake_mode_does_not_claim_a_model_was_called():
+    c = GemmaClient("fake")
+    c.ping()
+    assert c.models_used == {f"{MODEL_SMALL} (saved fixture, not called)"}
+    assert c.api_calls == 0
