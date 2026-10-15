@@ -3,7 +3,8 @@
 The sandbox/compare/scan/xray here are the stand-ins from helpers.py (uv
 virtualenvs, the doc's Docker fallback), so this proves the wiring, the
 migration patches and the repair loop against LinkWatch's actual test suite.
-Slow (~6 s per test run because of test_slow_is_up) and needs network for uv.
+Each test runs twice: in uv virtualenvs and in Docker containers (tranceplant-sandbox image).
+Slow (~6 s per test run because of test_slow_is_up) and needs network for package installs.
 """
 
 import json
@@ -25,8 +26,11 @@ T_REPORT = "tests/test_report.py::test_report_renders_all_sites"
 T_CONFIG = "tests/test_config.py::test_sites_file_loads"
 
 
-@pytest.fixture
-def env(linkwatch, monkeypatch, tmp_path, needs_uv):
+@pytest.fixture(params=["uv", "docker"])
+def env(request, linkwatch, monkeypatch, tmp_path, needs_uv):
+    if request.param == "docker" and not helpers.docker_ready():
+        pytest.skip(f"docker or the {helpers.SANDBOX_IMAGE} image is not available")
+    monkeypatch.setattr(cli, "trial_backend", request.param, raising=False)
     install_stages(monkeypatch, **helpers.STAGES)
     monkeypatch.setattr(cli, "console", Console(width=250))
     fx = tmp_path / "fx"
@@ -37,9 +41,11 @@ def env(linkwatch, monkeypatch, tmp_path, needs_uv):
 
 def trial(repo, dep, out):
     result = CliRunner().invoke(cli.app, ["--gemma", "fake", "trial", str(repo), dep, "--out", str(out),
-                                          "--backend", "uv"], catch_exceptions=False)
+                                          "--backend", cli.trial_backend], catch_exceptions=False)
     assert result.exit_code == 0, result.output
-    return Capsule.model_validate_json((out / dep / "capsule.json").read_text()), result.output
+    cap = Capsule.model_validate_json((out / dep / "capsule.json").read_text())
+    assert cap.control.backend == cap.donor.backend == cli.trial_backend
+    return cap, result.output
 
 
 def outcomes(run):

@@ -147,8 +147,18 @@ def parse_junit(path: Path) -> list[TestResult]:
     return results
 
 
+SANDBOX_IMAGE = "tranceplant-sandbox"  # built from Dockerfile.sandbox
+SETUP_FAILED = 97
+
+
+def docker_ready() -> bool:
+    if not shutil.which("docker"):
+        return False
+    return subprocess.run(["docker", "image", "inspect", SANDBOX_IMAGE], capture_output=True).returncode == 0
+
+
 def run_side(repo, side, *, patch, evidence_dir, label, backend="uv") -> SideRun:
-    """Two uv virtual environments: the doc's Docker fallback."""
+    """backend="docker": one container per side. backend="uv": two local venvs, the doc's fallback."""
     evidence_dir = Path(evidence_dir)
     root = evidence_dir.parent
     work = root / "work" / label
@@ -168,22 +178,33 @@ def run_side(repo, side, *, patch, evidence_dir, label, backend="uv") -> SideRun
     if patch:
         env = dict(os.environ, GIT_CEILING_DIRECTORIES=str(work.parent))
         setup_ok = sh(["git", "apply", str(patch)], env=env).returncode == 0
-    if setup_ok:
-        setup_ok = sh(["uv", "venv", "-q", "--python", "3.12", ".venv"]).returncode == 0
-    if setup_ok:
-        reqs = [a for f in ("requirements.txt", "requirements-dev.txt") if (work / f).is_file() for a in ("-r", f)]
-        setup_ok = sh(["uv", "pip", "install", "-q", "-p", ".venv", *reqs]).returncode == 0
+    reqs = [a for f in ("requirements.txt", "requirements-dev.txt") if (work / f).is_file() for a in ("-r", f)]
     results, exit_code = [], None
-    if setup_ok:
-        proc = sh([".venv/bin/python", "-m", "pytest", "-q", "-p", "no:cacheprovider", f"--junitxml={junit}"])
-        exit_code = proc.returncode
-        if junit.is_file():
-            results = parse_junit(junit)
+    if setup_ok and backend == "docker":
+        script = (
+            f"uv venv -q /tmp/venv --python python3.12 && uv pip install -q -p /tmp/venv {' '.join(reqs)} "
+            f"|| exit {SETUP_FAILED}; /tmp/venv/bin/python -c 'import platform; print(platform.platform())'; "
+            f"/tmp/venv/bin/python -m pytest -q -p no:cacheprovider --junitxml=/evidence/{label}.junit.xml"
+        )
+        proc = sh(["docker", "run", "--rm", "-v", f"{work}:/repo", "-v", f"{evidence_dir}:/evidence",
+                   "-v", "tranceplant-uv-cache:/root/.cache/uv", "-e", "UV_LINK_MODE=copy",
+                   "-e", "UV_PYTHON_DOWNLOADS=never", "-w", "/repo", SANDBOX_IMAGE, "sh", "-c", script])
+        setup_ok = proc.returncode != SETUP_FAILED
+        exit_code = proc.returncode if setup_ok else None
+    elif setup_ok:
+        setup_ok = sh(["uv", "venv", "-q", "--python", "3.12", ".venv"]).returncode == 0
+        if setup_ok:
+            setup_ok = sh(["uv", "pip", "install", "-q", "-p", ".venv", *reqs]).returncode == 0
+        if setup_ok:
+            exit_code = sh([".venv/bin/python", "-m", "pytest", "-q", "-p", "no:cacheprovider",
+                            f"--junitxml={junit}"]).returncode
+    if setup_ok and junit.is_file():
+        results = parse_junit(junit)
     log.write_text("".join(lines))
     return SideRun(
         side=side, label=label, command="python -m pytest --junitxml", exit_code=exit_code, setup_ok=setup_ok,
         results=results, junit_file=junit.relative_to(root).as_posix() if junit.is_file() else None,
-        log_file=log.relative_to(root).as_posix(), python_version="3.12", backend="uv",
+        log_file=log.relative_to(root).as_posix(), python_version="3.12", backend=backend,
     )
 
 
