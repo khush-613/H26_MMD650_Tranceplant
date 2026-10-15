@@ -4,113 +4,111 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Tranceplant</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,500..800&family=Atkinson+Hyperlegible+Mono:wght@400;600&family=Atkinson+Hyperlegible+Next:wght@400;600;700&display=swap">
   <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-  <header class="topbar">
-    <div class="brand">
-      <span class="logo" aria-hidden="true">⇄</span>
-      <div>
-        <h1>Tranceplant</h1>
-        <p class="tagline">We didn't guess whether the swap is safe; we ran both and compared.</p>
-      </div>
-    </div>
-    <div class="pills" aria-live="polite">
-      <span class="pill" id="pill-gemma">Gemma key: …</span>
-      <span class="pill" id="pill-docker">Sandbox: …</span>
+  <header class="bar">
+    <a class="mark" href="/" aria-label="Tranceplant home">
+      <svg class="glyph" viewBox="0 0 32 32" aria-hidden="true">
+        <rect x="2" y="15" width="11" height="12" rx="2.5" class="ghost-part"/><rect x="19" y="15" width="11" height="12" rx="2.5"/>
+        <path d="M7.5 12 C8 4, 24 4, 24.5 11"/><path d="M21 8.5 L24.6 11.6 L27.6 8"/>
+      </svg>
+      <span>Tranceplant</span>
+    </a>
+    <p class="motto">We didn't guess whether the swap is safe. We ran both and compared.</p>
+    <div class="vitals" aria-live="polite">
+      <span class="vital" id="pill-docker"><i></i>Sandbox</span>
+      <span class="vital" id="pill-gemma"><i></i>Gemma 4</span>
     </div>
   </header>
 
-  <main class="layout">
-    <section class="card controls" aria-labelledby="run-title">
-      <h2 id="run-title">Run</h2>
+  <main class="theatre">
+    <section class="case panel" aria-labelledby="case-title">
+      <h2 class="label" id="case-title">Case</h2>
       <form id="run-form" autocomplete="off">
-        <label for="repo">Repository folder</label>
-        <input id="repo" name="repo" type="text" spellcheck="false">
-
-        <label for="dep">Dependency</label>
-        <input id="dep" name="dep" type="text" list="dep-suggestions" value="jinja2" spellcheck="false">
-        <datalist id="dep-suggestions">
-          <option value="jinja2"><option value="toml"><option value="appdirs">
-          <option value="requests"><option value="nose"><option value="pydantic">
-        </datalist>
-
-        <div class="row">
-          <div>
-            <label for="gemma">Gemma</label>
-            <select id="gemma" name="gemma">
-              <option value="fake" selected>fake (saved replies)</option>
-              <option value="live">live (API + cache)</option>
-              <option value="offline">offline (cache only)</option>
-            </select>
-          </div>
-          <div>
-            <label for="backend">Sandbox</label>
-            <select id="backend" name="backend">
-              <option value="auto" selected>auto</option>
-              <option value="docker">docker</option>
-              <option value="uv">uv</option>
-            </select>
-          </div>
+        <div class="field repo-field">
+          <label for="repo">Repository folder</label>
+          <input id="repo" name="repo" type="text" spellcheck="false">
+        </div>
+        <div class="field dep-field">
+          <label for="dep">Dependency to replace</label>
+          <input id="dep" name="dep" type="text" list="dep-suggestions" value="jinja2" spellcheck="false">
+          <datalist id="dep-suggestions">
+            <option value="jinja2"><option value="toml"><option value="appdirs">
+            <option value="requests"><option value="nose"><option value="pydantic">
+          </datalist>
+          <div class="picks" id="picks" aria-label="Quick picks"></div>
         </div>
 
-        <div class="buttons">
-          <button type="button" data-command="scan" class="secondary">Scan</button>
-          <button type="button" data-command="xray" class="secondary">X-Ray</button>
-          <button type="button" data-command="trial" class="primary">Run trial</button>
-          <button type="button" data-command="gemma-check" class="ghost">Gemma check</button>
+        <div class="actions">
+          <button type="button" data-command="scan" class="btn quiet">Scan dependencies</button>
+          <button type="button" data-command="xray" class="btn quiet">Show usages</button>
+          <button type="button" data-command="trial" class="btn go" id="trial-button">Run trial <span aria-hidden="true">→</span></button>
         </div>
-        <p class="hint">A live trial makes several Gemma 4 calls and two sandbox runs, so it can take a few minutes.</p>
+
+        <details class="settings">
+          <summary>Run settings</summary>
+          <div class="settings-grid">
+            <div class="field">
+              <label for="gemma">Gemma 4</label>
+              <select id="gemma" name="gemma">
+                <option value="fake" selected>Saved replies (no key needed)</option>
+                <option value="live">Live API</option>
+                <option value="offline">Cache only</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="backend">Sandbox</label>
+              <select id="backend" name="backend">
+                <option value="auto" selected>Automatic</option>
+                <option value="docker">Docker</option>
+                <option value="uv">uv (no Docker)</option>
+              </select>
+            </div>
+            <button type="button" data-command="gemma-check" class="btn quiet small">Check Gemma connection</button>
+          </div>
+        </details>
+        <p class="hint">A trial runs the original and the swapped repo in two sandboxes. With live Gemma it can take a few minutes.</p>
       </form>
       <p class="error" id="form-error" role="alert" hidden></p>
     </section>
 
-    <section class="card output" aria-labelledby="output-title">
-      <div class="output-head">
-        <h2 id="output-title">Output</h2>
+    <section class="monitor panel" aria-labelledby="monitor-title">
+      <div class="panel-head">
+        <h2 class="label" id="monitor-title">Live</h2>
         <div class="job-meta">
-          <span id="job-status" class="status idle">idle</span>
-          <span id="job-time"></span>
-          <button type="button" id="stop" class="ghost small" hidden>Stop</button>
+          <span id="job-status" class="status idle">Idle</span>
+          <span id="job-time" class="mono muted"></span>
+          <button type="button" id="stop" class="btn quiet small" hidden>Stop</button>
         </div>
       </div>
-      <p class="job-command" id="job-command">Pick a command to run.</p>
-      <pre id="log" class="log" tabindex="0" aria-label="Command output"></pre>
+      <p class="idle" id="idle">Start with <strong>Scan dependencies</strong> to rank every package by risk. Pick one, check where the repo uses it, then <strong>Run trial</strong>: the original and the swapped repo run the same tests side by side.</p>
+      <p class="cmd mono" id="job-command" hidden></p>
+      <ol class="stages" id="stages" hidden></ol>
+      <div class="readout" id="readout" hidden></div>
+      <details class="raw" id="raw">
+        <summary>Full output</summary>
+        <pre id="log" class="log" tabindex="0" aria-label="Command output"></pre>
+      </details>
       <details class="history">
         <summary>Recent runs</summary>
         <ul id="jobs"></ul>
       </details>
     </section>
 
-    <section class="card capsules" aria-labelledby="capsules-title">
-      <div class="output-head">
-        <h2 id="capsules-title">Exit capsules</h2>
-        <button type="button" id="refresh" class="ghost small">Refresh</button>
+    <aside class="capsules panel" aria-labelledby="capsules-title">
+      <div class="panel-head">
+        <h2 class="label" id="capsules-title">Capsules</h2>
+        <button type="button" id="refresh" class="btn quiet small">Refresh</button>
       </div>
-      <div id="capsule-list" class="capsule-list">
-        <p class="empty">No capsules yet. Run a trial to make one.</p>
-      </div>
-    </section>
-  </main>
+      <div id="capsule-list" class="capsule-list"></div>
+    </aside>
 
-  <template id="capsule-card">
-    <article class="capsule">
-      <div class="capsule-head">
-        <h3 class="capsule-name"></h3>
-        <span class="verdict"></span>
-      </div>
-      <p class="swap"></p>
-      <dl class="stats">
-        <div><dt>Newly fixed</dt><dd class="fixed"></dd></div>
-        <div><dt>Regressions</dt><dd class="regressions"></dd></div>
-        <div><dt>Open gaps</dt><dd class="gaps"></dd></div>
-        <div><dt>Repair rounds</dt><dd class="rounds"></dd></div>
-      </dl>
-      <p class="reason"></p>
-      <div class="links"></div>
-      <button type="button" class="secondary small replay">Replay</button>
-    </article>
-  </template>
+    <section class="viewer panel" id="viewer" hidden aria-labelledby="viewer-title"></section>
+  </main>
 
   <script src="/static/app.js"></script>
 </body>
