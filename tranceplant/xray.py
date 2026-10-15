@@ -85,6 +85,14 @@ def import_names(dep: str) -> list[str]:
     return IMPORT_NAMES.get(name, [name.replace("-", "_")])
 
 
+def distribution_for(module: str) -> str:
+    """Best guess at the PyPI project that provides a top-level module."""
+    for dist, modules in IMPORT_NAMES.items():
+        if module in modules:
+            return dist
+    return canonicalize_name(module)
+
+
 def imported_modules(repo: Path) -> dict[str, list[Usage]]:
     """Import statements for every third-party top-level module, keyed by module name.
 
@@ -242,6 +250,7 @@ def _partner_usages(repo: Path, dep: str) -> Iterator[Usage]:
         return
     decl, version = scan.pinned_declaration(decls)
     try:
+        version = version or scan.latest_version(dep)
         requires = scan.pypi_json(dep, version)["info"].get("requires_dist") or []
     except (httpx.HTTPError, KeyError, ValueError) as exc:
         log.warning("no PyPI metadata for %s %s (%s); partner libraries not listed", dep, version or "latest", exc)

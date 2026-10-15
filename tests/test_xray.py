@@ -33,6 +33,7 @@ def pypi(monkeypatch):
         return {"info": {"requires_dist": REQUIRES_DIST.get(canonicalize_name(name), [])}}
 
     monkeypatch.setattr(scan, "pypi_json", fake)
+    monkeypatch.setattr(scan, "latest_version", lambda name: None)
     return calls
 
 
