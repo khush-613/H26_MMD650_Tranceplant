@@ -90,8 +90,12 @@ class Settings:
 settings = Settings()
 
 
-def load_dotenv(path: Path = Path(".env")) -> None:
-    """Minimal .env reader: KEY=VALUE lines, existing environment wins."""
+def load_dotenv(path: Path | None = None) -> None:
+    """Minimal .env reader: KEY=VALUE lines, existing environment wins.
+
+    Reads ./.env unless TRANCEPLANT_DOTENV points elsewhere (tests point it at nothing).
+    """
+    path = path or Path(os.environ.get("TRANCEPLANT_DOTENV", ".env"))
     if not path.is_file():
         return
     for line in path.read_text(encoding="utf-8").splitlines():
@@ -540,6 +544,25 @@ def schema(
         console.print(f"Wrote {output}")
     else:
         print(text)
+
+
+@app.command()
+def ui(
+    port: Annotated[int, typer.Option(envvar="PORT", help="Port to listen on (127.0.0.1 only).")] = 8765,
+    out: Annotated[Path, typer.Option(help="Where capsule folders go.")] = Path("capsules"),
+):
+    """Open a local web page to run scans and trials and browse capsules."""
+    from .web import PROJECT_DIR, make_server
+
+    load_dotenv(PROJECT_DIR / ".env")  # when started from another folder
+    server = make_server(out.resolve(), port)
+    console.print(f"Tranceplant UI on [bold]http://127.0.0.1:{port}[/] (Ctrl-C to stop)")
+    try:
+        server.serve_forever()
+    except KeyboardInterrupt:
+        pass
+    finally:
+        server.server_close()
 
 
 @app.command("gemma-check")

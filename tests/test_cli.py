@@ -358,3 +358,11 @@ def test_dotenv_does_not_override_the_environment(tmp_path, monkeypatch):
     cli.load_dotenv(env)
     assert os.environ["TP_A"] == "from_env" and os.environ["TP_B"] == "quoted" and "TP_EMPTY" not in os.environ
     monkeypatch.delenv("TP_B")
+
+
+def test_tests_never_load_the_real_dotenv(tmp_path, monkeypatch):
+    real = tmp_path / ".env"
+    real.write_text("GEMINI_API_KEY=should-not-load\n")
+    monkeypatch.chdir(tmp_path)
+    cli.load_dotenv()
+    assert "GEMINI_API_KEY" not in os.environ
