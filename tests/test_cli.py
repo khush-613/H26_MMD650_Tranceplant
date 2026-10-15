@@ -6,7 +6,7 @@ from typer.testing import CliRunner
 
 import helpers
 from helpers import install_stages
-from tranceplant import cli
+from tranceplant import cli, compare
 from tranceplant.models import Capsule, SideRun, TestResult
 
 runner = CliRunner()
@@ -248,7 +248,7 @@ def test_max_repairs_zero(linkwatch, monkeypatch, fx, tmp_path):
 
 def test_donor_setup_failure_is_rejected_even_without_regressions(linkwatch, monkeypatch, fx, tmp_path):
     sandbox = FakeSandbox(CONTROL, {}, donor_setup_ok=False)
-    stages(monkeypatch, sandbox, compare={"compare": helpers.compare, "decide_verdict": lambda c, g: "Accepted"})
+    stages(monkeypatch, sandbox, compare={"compare": compare.compare, "decide_verdict": lambda c, g: "Accepted"})
     result = invoke("trial", linkwatch, "jinja2", "--out", tmp_path / "caps", "--max-repairs", "0")
     assert result.exit_code == 0, result.output
     cap = load(tmp_path / "caps" / "jinja2")
