@@ -1,0 +1,1688 @@
+{
+ "assessed_version": "2.11.3",
+ "pinned_release": "2021-01-31",
+ "declarations": [
+  {
+   "file": "requirements.txt",
+   "spec": "Jinja2==2.11.3",
+   "line": 4
+  },
+  {
+   "file": "pyproject.toml",
+   "spec": "Jinja2==2.11.3",
+   "line": 16
+  }
+ ],
+ "repo_usages": [
+  {
+   "file": "linkwatch/report.py",
+   "line": 3,
+   "kind": "from_import",
+   "symbol": "jinja2.Environment",
+   "code": "from jinja2 import Environment, FileSystemLoader, select_autoescape"
+  },
+  {
+   "file": "linkwatch/report.py",
+   "line": 3,
+   "kind": "from_import",
+   "symbol": "jinja2.FileSystemLoader",
+   "code": "from jinja2 import Environment, FileSystemLoader, select_autoescape"
+  },
+  {
+   "file": "linkwatch/report.py",
+   "line": 3,
+   "kind": "from_import",
+   "symbol": "jinja2.select_autoescape",
+   "code": "from jinja2 import Environment, FileSystemLoader, select_autoescape"
+  },
+  {
+   "file": "linkwatch/report.py",
+   "line": 9,
+   "kind": "attribute",
+   "symbol": "jinja2.Environment",
+   "code": "return Environment("
+  },
+  {
+   "file": "linkwatch/report.py",
+   "line": 10,
+   "kind": "attribute",
+   "symbol": "jinja2.FileSystemLoader",
+   "code": "loader=FileSystemLoader(template_dir()),"
+  },
+  {
+   "file": "linkwatch/report.py",
+   "line": 11,
+   "kind": "attribute",
+   "symbol": "jinja2.select_autoescape",
+   "code": "autoescape=select_autoescape([\"html\", \"j2\"]),"
+  }
+ ],
+ "score": [
+  {
+   "finding": "4 known vulnerabilities affect jinja2 2.11.3 (OSV.dev): CVE-2025-27516 (medium), CVE-2024-56326 (medium), CVE-2024-34064 (medium), CVE-2024-22195 (medium); all are fixed by 3.1.6",
+   "points": 40
+  },
+  {
+   "finding": "Pinned 2.11.3 (2021-01-31) is a major version behind the latest 3.1.6 (2025-03-05)",
+   "points": 15
+  },
+  {
+   "finding": "jinja2 2.11.3 (released 2021-01-31) accepts any MarkupSafe>=0.23 with no upper bound, so pip installs MarkupSafe 3.0.4 (released 2026-10-02)",
+   "points": 15
+  }
+ ],
+ "conflict": null,
+ "removed_imports": [],
+ "pypi": {
+  "info": {
+   "author": "Armin Ronacher",
+   "author_email": "armin.ronacher@active-4.com",
+   "bugtrack_url": null,
+   "classifiers": [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Web Environment",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: BSD License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 2",
+    "Programming Language :: Python :: 2.7",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.5",
+    "Programming Language :: Python :: 3.6",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Programming Language :: Python :: Implementation :: PyPy",
+    "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Text Processing :: Markup :: HTML"
+   ],
+   "description_content_type": "text/x-rst",
+   "docs_url": null,
+   "download_url": "",
+   "downloads": {
+    "last_day": -1,
+    "last_month": -1,
+    "last_week": -1
+   },
+   "dynamic": null,
+   "home_page": "https://palletsprojects.com/p/jinja/",
+   "keywords": "",
+   "license": "BSD-3-Clause",
+   "license_expression": null,
+   "license_files": null,
+   "maintainer": "Pallets",
+   "maintainer_email": "contact@palletsprojects.com",
+   "name": "Jinja2",
+   "package_url": "https://pypi.org/project/Jinja2/",
+   "platform": "",
+   "project_url": "https://pypi.org/project/Jinja2/",
+   "project_urls": {
+    "Code": "https://github.com/pallets/jinja",
+    "Documentation": "https://jinja.palletsprojects.com/",
+    "Homepage": "https://palletsprojects.com/p/jinja/",
+    "Issue tracker": "https://github.com/pallets/jinja/issues"
+   },
+   "provides_extra": null,
+   "release_url": "https://pypi.org/project/Jinja2/2.11.3/",
+   "requires_dist": [
+    "MarkupSafe (>=0.23)",
+    "Babel (>=0.8) ; extra == 'i18n'"
+   ],
+   "requires_python": ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*",
+   "summary": "A very fast and expressive template engine.",
+   "version": "2.11.3",
+   "yanked": false,
+   "yanked_reason": null
+  },
+  "last_serial": 27788726,
+  "ownership": {
+   "organization": "pallets",
+   "roles": []
+  },
+  "urls": [
+   {
+    "filename": "Jinja2-2.11.3-py2.py3-none-any.whl",
+    "packagetype": "bdist_wheel",
+    "size": 125699,
+    "url": "https://files.pythonhosted.org/packages/7e/c2/1eece8c95ddbc9b1aeb64f5783a9e07a286de42191b7204d67b7496ddf35/Jinja2-2.11.3-py2.py3-none-any.whl",
+    "upload_time_iso_8601": "2021-01-31T16:33:07.289264Z"
+   },
+   {
+    "filename": "Jinja2-2.11.3.tar.gz",
+    "packagetype": "sdist",
+    "size": 257589,
+    "url": "https://files.pythonhosted.org/packages/4f/e7/65300e6b32e69768ded990494809106f87da1d436418d5f1367ed3966fd7/Jinja2-2.11.3.tar.gz",
+    "upload_time_iso_8601": "2021-01-31T16:33:09.175429Z"
+   }
+  ],
+  "vulnerabilities": [
+   {
+    "aliases": [
+     "CVE-2024-22195",
+     "PYSEC-2026-1473"
+    ],
+    "details": "The `xmlattr` filter in affected versions of Jinja accepts keys containing spaces. XML/HTML attributes cannot contain spaces, as each would then be interpreted as a separate attribute. If an application accepts keys (as opposed to only values) as user input, and renders these in pages that other users see as well, an attacker could use this to inject other attributes and perform XSS. Note that accepting keys as user input is not common or a particularly intended use case of the `xmlattr` filter, and an application doing so should already be verifying what keys are provided regardless of this fix.",
+    "fixed_in": [
+     "3.1.3"
+    ],
+    "id": "GHSA-h5c8-rqwp-cp95",
+    "link": "https://osv.dev/vulnerability/GHSA-h5c8-rqwp-cp95",
+    "source": "osv",
+    "summary": null,
+    "withdrawn": null
+   },
+   {
+    "aliases": [
+     "CVE-2024-34064",
+     "PYSEC-2026-1474"
+    ],
+    "details": "The `xmlattr` filter in affected versions of Jinja accepts keys containing non-attribute characters. XML/HTML attributes cannot contain spaces, `/`, `>`, or `=`, as each would then be interpreted as starting a separate attribute. If an application accepts keys (as opposed to only values) as user input, and renders these in pages that other users see as well, an attacker could use this to inject other attributes and perform XSS. The fix for the previous GHSA-h5c8-rqwp-cp95 CVE-2024-22195 only addressed spaces but not other characters.\n\nAccepting keys as user input is now explicitly considered an unintended use case of the `xmlattr` filter, and code that does so without otherwise validating the input should be flagged as insecure, regardless of Jinja version. Accepting _values_ as user input continues to be safe.",
+    "fixed_in": [
+     "3.1.4"
+    ],
+    "id": "GHSA-h75v-3vvj-5mfj",
+    "link": "https://osv.dev/vulnerability/GHSA-h75v-3vvj-5mfj",
+    "source": "osv",
+    "summary": null,
+    "withdrawn": null
+   },
+   {
+    "aliases": [
+     "CVE-2024-56326",
+     "PYSEC-2026-1475"
+    ],
+    "details": "An oversight in how the Jinja sandboxed environment detects calls to `str.format` allows an attacker that controls the content of a template to execute arbitrary Python code.\n\nTo exploit the vulnerability, an attacker needs to control the content of a template. Whether that is the case depends on the type of application using Jinja. This vulnerability impacts users of applications which execute untrusted templates.\n\nJinja's sandbox does catch calls to `str.format` and ensures they don't escape the sandbox. However, it's possible to store a reference to a malicious string's `format` method, then pass that to a filter that calls it. No such filters are built-in to Jinja, but could be present through custom filters in an application. After the fix, such indirect calls are also handled by the sandbox.",
+    "fixed_in": [
+     "3.1.5"
+    ],
+    "id": "GHSA-q2x7-8rv6-6q7h",
+    "link": "https://osv.dev/vulnerability/GHSA-q2x7-8rv6-6q7h",
+    "source": "osv",
+    "summary": null,
+    "withdrawn": null
+   },
+   {
+    "aliases": [
+     "CVE-2025-27516",
+     "PYSEC-2026-1471"
+    ],
+    "details": "An oversight in how the Jinja sandboxed environment interacts with the `|attr` filter allows an attacker that controls the content of a template to execute arbitrary Python code.\n\nTo exploit the vulnerability, an attacker needs to control the content of a template. Whether that is the case depends on the type of application using Jinja. This vulnerability impacts users of applications which execute untrusted templates.\n\nJinja's sandbox does catch calls to `str.format` and ensures they don't escape the sandbox. However, it's possible to use the `|attr` filter to get a reference to a string's plain format method, bypassing the sandbox. After the fix, the `|attr` filter no longer bypasses the environment's attribute lookup.",
+    "fixed_in": [
+     "3.1.6"
+    ],
+    "id": "GHSA-cpwx-vrp4-4pq7",
+    "link": "https://osv.dev/vulnerability/GHSA-cpwx-vrp4-4pq7",
+    "source": "osv",
+    "summary": null,
+    "withdrawn": null
+   },
+   {
+    "aliases": [
+     "CVE-2024-22195",
+     "GHSA-h5c8-rqwp-cp95"
+    ],
+    "details": "The `xmlattr` filter in affected versions of Jinja accepts keys containing spaces. XML/HTML attributes cannot contain spaces, as each would then be interpreted as a separate attribute. If an application accepts keys (as opposed to only values) as user input, and renders these in pages that other users see as well, an attacker could use this to inject other attributes and perform XSS. Note that accepting keys as user input is not common or a particularly intended use case of the `xmlattr` filter, and an application doing so should already be verifying what keys are provided regardless of this fix.",
+    "fixed_in": [
+     "3.1.3"
+    ],
+    "id": "PYSEC-2026-1473",
+    "link": "https://osv.dev/vulnerability/PYSEC-2026-1473",
+    "source": "osv",
+    "summary": null,
+    "withdrawn": null
+   },
+   {
+    "aliases": [
+     "CVE-2025-27516",
+     "GHSA-cpwx-vrp4-4pq7"
+    ],
+    "details": "An oversight in how the Jinja sandboxed environment interacts with the `|attr` filter allows an attacker that controls the content of a template to execute arbitrary Python code.\n\nTo exploit the vulnerability, an attacker needs to control the content of a template. Whether that is the case depends on the type of application using Jinja. This vulnerability impacts users of applications which execute untrusted templates.\n\nJinja's sandbox does catch calls to `str.format` and ensures they don't escape the sandbox. However, it's possible to use the `|attr` filter to get a reference to a string's plain format method, bypassing the sandbox. After the fix, the `|attr` filter no longer bypasses the environment's attribute lookup.",
+    "fixed_in": [
+     "3.1.6"
+    ],
+    "id": "PYSEC-2026-1471",
+    "link": "https://osv.dev/vulnerability/PYSEC-2026-1471",
+    "source": "osv",
+    "summary": null,
+    "withdrawn": null
+   },
+   {
+    "aliases": [
+     "CVE-2024-34064",
+     "GHSA-h75v-3vvj-5mfj"
+    ],
+    "details": "The `xmlattr` filter in affected versions of Jinja accepts keys containing non-attribute characters. XML/HTML attributes cannot contain spaces, `/`, `>`, or `=`, as each would then be interpreted as starting a separate attribute. If an application accepts keys (as opposed to only values) as user input, and renders these in pages that other users see as well, an attacker could use this to inject other attributes and perform XSS. The fix for the previous GHSA-h5c8-rqwp-cp95 CVE-2024-22195 only addressed spaces but not other characters.\n\nAccepting keys as user input is now explicitly considered an unintended use case of the `xmlattr` filter, and code that does so without otherwise validating the input should be flagged as insecure, regardless of Jinja version. Accepting _values_ as user input continues to be safe.",
+    "fixed_in": [
+     "3.1.4"
+    ],
+    "id": "PYSEC-2026-1474",
+    "link": "https://osv.dev/vulnerability/PYSEC-2026-1474",
+    "source": "osv",
+    "summary": null,
+    "withdrawn": null
+   },
+   {
+    "aliases": [
+     "CVE-2024-56326",
+     "GHSA-q2x7-8rv6-6q7h"
+    ],
+    "details": "An oversight in how the Jinja sandboxed environment detects calls to `str.format` allows an attacker that controls the content of a template to execute arbitrary Python code.\n\nTo exploit the vulnerability, an attacker needs to control the content of a template. Whether that is the case depends on the type of application using Jinja. This vulnerability impacts users of applications which execute untrusted templates.\n\nJinja's sandbox does catch calls to `str.format` and ensures they don't escape the sandbox. However, it's possible to store a reference to a malicious string's `format` method, then pass that to a filter that calls it. No such filters are built-in to Jinja, but could be present through custom filters in an application. After the fix, such indirect calls are also handled by the sandbox.",
+    "fixed_in": [
+     "3.1.5"
+    ],
+    "id": "PYSEC-2026-1475",
+    "link": "https://osv.dev/vulnerability/PYSEC-2026-1475",
+    "source": "osv",
+    "summary": null,
+    "withdrawn": null
+   }
+  ]
+ },
+ "osv": {
+  "vulns": [
+   {
+    "id": "GHSA-cpwx-vrp4-4pq7",
+    "summary": "Jinja2 vulnerable to sandbox breakout through attr filter selecting format method",
+    "details": "An oversight in how the Jinja sandboxed environment interacts with the `|attr` filter allows an attacker that controls the content of a template to execute arbitrary Python code.\n\nTo exploit the vulnerability, an attacker needs to control the content of a template. Whether that is the case depends on the type of application using Jinja. This vulnerability impacts users of applications which execute untrusted templates.\n\nJinja's sandbox does catch calls to `str.format` and ensures they don't escape the sandbox. However, it's possible to use the `|attr` filter to get a reference to a string's plain format method, bypassing the sandbox. After the fix, the `|attr` filter no longer bypasses the environment's attribute lookup.",
+    "aliases": [
+     "CVE-2025-27516",
+     "PYSEC-2026-1471"
+    ],
+    "modified": "2026-09-10T03:49:48.526758681Z",
+    "published": "2025-03-05T20:40:14Z",
+    "database_specific": {
+     "nvd_published_at": "2025-03-05T21:15:20Z",
+     "cwe_ids": [
+      "CWE-1336"
+     ],
+     "severity": "MODERATE",
+     "github_reviewed": true,
+     "github_reviewed_at": "2025-03-05T20:40:14Z"
+    },
+    "references": [
+     {
+      "type": "WEB",
+      "url": "https://github.com/pallets/jinja/security/advisories/GHSA-cpwx-vrp4-4pq7"
+     },
+     {
+      "type": "ADVISORY",
+      "url": "https://nvd.nist.gov/vuln/detail/CVE-2025-27516"
+     },
+     {
+      "type": "WEB",
+      "url": "https://github.com/pallets/jinja/commit/90457bbf33b8662926ae65cdde4c4c32e756e403"
+     },
+     {
+      "type": "PACKAGE",
+      "url": "https://github.com/pallets/jinja"
+     },
+     {
+      "type": "WEB",
+      "url": "https://lists.debian.org/debian-lts-announce/2025/04/msg00022.html"
+     },
+     {
+      "type": "WEB",
+      "url": "https://lists.debian.org/debian-lts-announce/2025/04/msg00045.html"
+     }
+    ],
+    "affected": [
+     {
+      "package": {
+       "name": "jinja2",
+       "ecosystem": "PyPI",
+       "purl": "pkg:pypi/jinja2"
+      },
+      "ranges": [
+       {
+        "type": "ECOSYSTEM",
+        "events": [
+         {
+          "introduced": "0"
+         },
+         {
+          "fixed": "3.1.6"
+         }
+        ]
+       }
+      ],
+      "versions": [
+       "2.0",
+       "2.0rc1",
+       "2.1",
+       "2.1.1",
+       "2.10",
+       "2.10.1",
+       "2.10.2",
+       "2.10.3",
+       "2.11.0",
+       "2.11.1",
+       "2.11.2",
+       "2.11.3",
+       "2.2",
+       "2.2.1",
+       "2.3",
+       "2.3.1",
+       "2.4",
+       "2.4.1",
+       "2.5",
+       "2.5.1",
+       "2.5.2",
+       "2.5.3",
+       "2.5.4",
+       "2.5.5",
+       "2.6",
+       "2.7",
+       "2.7.1",
+       "2.7.2",
+       "2.7.3",
+       "2.8",
+       "2.8.1",
+       "2.9",
+       "2.9.1",
+       "2.9.2",
+       "2.9.3",
+       "2.9.4",
+       "2.9.5",
+       "2.9.6",
+       "3.0.0",
+       "3.0.0a1",
+       "3.0.0rc1",
+       "3.0.0rc2",
+       "3.0.1",
+       "3.0.2",
+       "3.0.3",
+       "3.1.0",
+       "3.1.1",
+       "3.1.2",
+       "3.1.3",
+       "3.1.4",
+       "3.1.5"
+      ],
+      "database_specific": {
+       "last_known_affected_version_range": "<= 3.1.5",
+       "source": "https://github.com/github/advisory-database/blob/main/advisories/github-reviewed/2025/03/GHSA-cpwx-vrp4-4pq7/GHSA-cpwx-vrp4-4pq7.json"
+      }
+     }
+    ],
+    "schema_version": "1.9.0",
+    "severity": [
+     {
+      "type": "CVSS_V4",
+      "score": "CVSS:4.0/AV:L/AC:L/AT:P/PR:L/UI:P/VC:H/VI:H/VA:H/SC:N/SI:N/SA:N"
+     }
+    ]
+   },
+   {
+    "id": "GHSA-h5c8-rqwp-cp95",
+    "summary": "Jinja vulnerable to HTML attribute injection when passing user input as keys to xmlattr filter",
+    "details": "The `xmlattr` filter in affected versions of Jinja accepts keys containing spaces. XML/HTML attributes cannot contain spaces, as each would then be interpreted as a separate attribute. If an application accepts keys (as opposed to only values) as user input, and renders these in pages that other users see as well, an attacker could use this to inject other attributes and perform XSS. Note that accepting keys as user input is not common or a particularly intended use case of the `xmlattr` filter, and an application doing so should already be verifying what keys are provided regardless of this fix.",
+    "aliases": [
+     "CVE-2024-22195",
+     "PYSEC-2026-1473"
+    ],
+    "modified": "2026-09-10T03:50:00.236017440Z",
+    "published": "2024-01-11T15:20:48Z",
+    "database_specific": {
+     "github_reviewed_at": "2024-01-11T15:20:48Z",
+     "nvd_published_at": "2024-01-11T03:15:11Z",
+     "cwe_ids": [
+      "CWE-79"
+     ],
+     "severity": "MODERATE",
+     "github_reviewed": true
+    },
+    "references": [
+     {
+      "type": "WEB",
+      "url": "https://github.com/pallets/jinja/security/advisories/GHSA-h5c8-rqwp-cp95"
+     },
+     {
+      "type": "ADVISORY",
+      "url": "https://nvd.nist.gov/vuln/detail/CVE-2024-22195"
+     },
+     {
+      "type": "WEB",
+      "url": "https://github.com/pallets/jinja/commit/716795349a41d4983a9a4771f7d883c96ea17be7"
+     },
+     {
+      "type": "PACKAGE",
+      "url": "https://github.com/pallets/jinja"
+     },
+     {
+      "type": "WEB",
+      "url": "https://github.com/pallets/jinja/releases/tag/3.1.3"
+     },
+     {
+      "type": "WEB",
+      "url": "https://lists.debian.org/debian-lts-announce/2024/01/msg00010.html"
+     },
+     {
+      "type": "WEB",
+      "url": "https://lists.debian.org/debian-lts-announce/2024/12/msg00009.html"
+     },
+     {
+      "type": "WEB",
+      "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/5XCWZD464AJJJUBOO7CMPXQ4ROBC6JX2"
+     },
+     {
+      "type": "WEB",
+      "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/DELCVUUYX75I5K4Q5WMJG4MUZJA6VAIP"
+     },
+     {
+      "type": "WEB",
+      "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/O7YWRBX6JQCWC2XXCTZ55C7DPMGICCN3"
+     }
+    ],
+    "affected": [
+     {
+      "package": {
+       "name": "jinja2",
+       "ecosystem": "PyPI",
+       "purl": "pkg:pypi/jinja2"
+      },
+      "ranges": [
+       {
+        "type": "ECOSYSTEM",
+        "events": [
+         {
+          "introduced": "0"
+         },
+         {
+          "fixed": "3.1.3"
+         }
+        ]
+       }
+      ],
+      "versions": [
+       "2.0",
+       "2.0rc1",
+       "2.1",
+       "2.1.1",
+       "2.10",
+       "2.10.1",
+       "2.10.2",
+       "2.10.3",
+       "2.11.0",
+       "2.11.1",
+       "2.11.2",
+       "2.11.3",
+       "2.2",
+       "2.2.1",
+       "2.3",
+       "2.3.1",
+       "2.4",
+       "2.4.1",
+       "2.5",
+       "2.5.1",
+       "2.5.2",
+       "2.5.3",
+       "2.5.4",
+       "2.5.5",
+       "2.6",
+       "2.7",
+       "2.7.1",
+       "2.7.2",
+       "2.7.3",
+       "2.8",
+       "2.8.1",
+       "2.9",
+       "2.9.1",
+       "2.9.2",
+       "2.9.3",
+       "2.9.4",
+       "2.9.5",
+       "2.9.6",
+       "3.0.0",
+       "3.0.0a1",
+       "3.0.0rc1",
+       "3.0.0rc2",
+       "3.0.1",
+       "3.0.2",
+       "3.0.3",
+       "3.1.0",
+       "3.1.1",
+       "3.1.2"
+      ],
+      "database_specific": {
+       "source": "https://github.com/github/advisory-database/blob/main/advisories/github-reviewed/2024/01/GHSA-h5c8-rqwp-cp95/GHSA-h5c8-rqwp-cp95.json"
+      }
+     }
+    ],
+    "schema_version": "1.9.0",
+    "severity": [
+     {
+      "type": "CVSS_V3",
+      "score": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:L/I:L/A:N"
+     }
+    ]
+   },
+   {
+    "id": "GHSA-h75v-3vvj-5mfj",
+    "summary": "Jinja vulnerable to HTML attribute injection when passing user input as keys to xmlattr filter",
+    "details": "The `xmlattr` filter in affected versions of Jinja accepts keys containing non-attribute characters. XML/HTML attributes cannot contain spaces, `/`, `>`, or `=`, as each would then be interpreted as starting a separate attribute. If an application accepts keys (as opposed to only values) as user input, and renders these in pages that other users see as well, an attacker could use this to inject other attributes and perform XSS. The fix for the previous GHSA-h5c8-rqwp-cp95 CVE-2024-22195 only addressed spaces but not other characters.\n\nAccepting keys as user input is now explicitly considered an unintended use case of the `xmlattr` filter, and code that does so without otherwise validating the input should be flagged as insecure, regardless of Jinja version. Accepting _values_ as user input continues to be safe.",
+    "aliases": [
+     "CVE-2024-34064",
+     "PYSEC-2026-1474"
+    ],
+    "modified": "2026-09-10T03:50:13.786450101Z",
+    "published": "2024-05-06T14:20:59Z",
+    "database_specific": {
+     "severity": "MODERATE",
+     "github_reviewed": true,
+     "github_reviewed_at": "2024-05-06T14:20:59Z",
+     "nvd_published_at": "2024-05-06T15:15:23Z",
+     "cwe_ids": [
+      "CWE-79"
+     ]
+    },
+    "references": [
+     {
+      "type": "WEB",
+      "url": "https://github.com/pallets/jinja/security/advisories/GHSA-h75v-3vvj-5mfj"
+     },
+     {
+      "type": "ADVISORY",
+      "url": "https://nvd.nist.gov/vuln/detail/CVE-2024-34064"
+     },
+     {
+      "type": "WEB",
+      "url": "https://github.com/pallets/jinja/commit/0668239dc6b44ef38e7a6c9f91f312fd4ca581cb"
+     },
+     {
+      "type": "PACKAGE",
+      "url": "https://github.com/pallets/jinja"
+     },
+     {
+      "type": "WEB",
+      "url": "https://lists.debian.org/debian-lts-announce/2024/12/msg00009.html"
+     },
+     {
+      "type": "WEB",
+      "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/567XIGSZMABG6TSMYWD7MIYNJSUQQRUC"
+     },
+     {
+      "type": "WEB",
+      "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/GCLF44KY43BSVMTE6S53B4V5WP3FRRSE"
+     },
+     {
+      "type": "WEB",
+      "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/SSCBHIL6BYKR5NRCBXP4XMP2CEEKGFVS"
+     },
+     {
+      "type": "WEB",
+      "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/ZALNWE3TXPPHVPSI3AZ5CTMSTAVN5UMS"
+     }
+    ],
+    "affected": [
+     {
+      "package": {
+       "name": "jinja2",
+       "ecosystem": "PyPI",
+       "purl": "pkg:pypi/jinja2"
+      },
+      "ranges": [
+       {
+        "type": "ECOSYSTEM",
+        "events": [
+         {
+          "introduced": "0"
+         },
+         {
+          "fixed": "3.1.4"
+         }
+        ]
+       }
+      ],
+      "versions": [
+       "2.0",
+       "2.0rc1",
+       "2.1",
+       "2.1.1",
+       "2.10",
+       "2.10.1",
+       "2.10.2",
+       "2.10.3",
+       "2.11.0",
+       "2.11.1",
+       "2.11.2",
+       "2.11.3",
+       "2.2",
+       "2.2.1",
+       "2.3",
+       "2.3.1",
+       "2.4",
+       "2.4.1",
+       "2.5",
+       "2.5.1",
+       "2.5.2",
+       "2.5.3",
+       "2.5.4",
+       "2.5.5",
+       "2.6",
+       "2.7",
+       "2.7.1",
+       "2.7.2",
+       "2.7.3",
+       "2.8",
+       "2.8.1",
+       "2.9",
+       "2.9.1",
+       "2.9.2",
+       "2.9.3",
+       "2.9.4",
+       "2.9.5",
+       "2.9.6",
+       "3.0.0",
+       "3.0.0a1",
+       "3.0.0rc1",
+       "3.0.0rc2",
+       "3.0.1",
+       "3.0.2",
+       "3.0.3",
+       "3.1.0",
+       "3.1.1",
+       "3.1.2",
+       "3.1.3"
+      ],
+      "database_specific": {
+       "source": "https://github.com/github/advisory-database/blob/main/advisories/github-reviewed/2024/05/GHSA-h75v-3vvj-5mfj/GHSA-h75v-3vvj-5mfj.json"
+      }
+     }
+    ],
+    "schema_version": "1.9.0",
+    "severity": [
+     {
+      "type": "CVSS_V3",
+      "score": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:L/I:L/A:N"
+     }
+    ]
+   },
+   {
+    "id": "GHSA-q2x7-8rv6-6q7h",
+    "summary": "Jinja has a sandbox breakout through indirect reference to format method",
+    "details": "An oversight in how the Jinja sandboxed environment detects calls to `str.format` allows an attacker that controls the content of a template to execute arbitrary Python code.\n\nTo exploit the vulnerability, an attacker needs to control the content of a template. Whether that is the case depends on the type of application using Jinja. This vulnerability impacts users of applications which execute untrusted templates.\n\nJinja's sandbox does catch calls to `str.format` and ensures they don't escape the sandbox. However, it's possible to store a reference to a malicious string's `format` method, then pass that to a filter that calls it. No such filters are built-in to Jinja, but could be present through custom filters in an application. After the fix, such indirect calls are also handled by the sandbox.",
+    "aliases": [
+     "CVE-2024-56326",
+     "PYSEC-2026-1475"
+    ],
+    "modified": "2026-09-10T03:50:21.662855250Z",
+    "published": "2024-12-23T17:56:08Z",
+    "database_specific": {
+     "github_reviewed_at": "2024-12-23T17:56:08Z",
+     "nvd_published_at": "2024-12-23T16:15:07Z",
+     "cwe_ids": [
+      "CWE-693"
+     ],
+     "severity": "MODERATE",
+     "github_reviewed": true
+    },
+    "references": [
+     {
+      "type": "WEB",
+      "url": "https://github.com/pallets/jinja/security/advisories/GHSA-q2x7-8rv6-6q7h"
+     },
+     {
+      "type": "ADVISORY",
+      "url": "https://nvd.nist.gov/vuln/detail/CVE-2024-56326"
+     },
+     {
+      "type": "WEB",
+      "url": "https://github.com/pallets/jinja/commit/48b0687e05a5466a91cd5812d604fa37ad0943b4"
+     },
+     {
+      "type": "PACKAGE",
+      "url": "https://github.com/pallets/jinja"
+     },
+     {
+      "type": "WEB",
+      "url": "https://github.com/pallets/jinja/releases/tag/3.1.5"
+     },
+     {
+      "type": "WEB",
+      "url": "https://lists.debian.org/debian-lts-announce/2025/04/msg00022.html"
+     }
+    ],
+    "affected": [
+     {
+      "package": {
+       "name": "jinja2",
+       "ecosystem": "PyPI",
+       "purl": "pkg:pypi/jinja2"
+      },
+      "ranges": [
+       {
+        "type": "ECOSYSTEM",
+        "events": [
+         {
+          "introduced": "0"
+         },
+         {
+          "fixed": "3.1.5"
+         }
+        ]
+       }
+      ],
+      "versions": [
+       "2.0",
+       "2.0rc1",
+       "2.1",
+       "2.1.1",
+       "2.10",
+       "2.10.1",
+       "2.10.2",
+       "2.10.3",
+       "2.11.0",
+       "2.11.1",
+       "2.11.2",
+       "2.11.3",
+       "2.2",
+       "2.2.1",
+       "2.3",
+       "2.3.1",
+       "2.4",
+       "2.4.1",
+       "2.5",
+       "2.5.1",
+       "2.5.2",
+       "2.5.3",
+       "2.5.4",
+       "2.5.5",
+       "2.6",
+       "2.7",
+       "2.7.1",
+       "2.7.2",
+       "2.7.3",
+       "2.8",
+       "2.8.1",
+       "2.9",
+       "2.9.1",
+       "2.9.2",
+       "2.9.3",
+       "2.9.4",
+       "2.9.5",
+       "2.9.6",
+       "3.0.0",
+       "3.0.0a1",
+       "3.0.0rc1",
+       "3.0.0rc2",
+       "3.0.1",
+       "3.0.2",
+       "3.0.3",
+       "3.1.0",
+       "3.1.1",
+       "3.1.2",
+       "3.1.3",
+       "3.1.4"
+      ],
+      "database_specific": {
+       "last_known_affected_version_range": "<= 3.1.4",
+       "source": "https://github.com/github/advisory-database/blob/main/advisories/github-reviewed/2024/12/GHSA-q2x7-8rv6-6q7h/GHSA-q2x7-8rv6-6q7h.json"
+      }
+     }
+    ],
+    "schema_version": "1.9.0",
+    "severity": [
+     {
+      "type": "CVSS_V3",
+      "score": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H"
+     },
+     {
+      "type": "CVSS_V4",
+      "score": "CVSS:4.0/AV:L/AC:L/AT:P/PR:L/UI:P/VC:H/VI:H/VA:H/SC:N/SI:N/SA:N"
+     }
+    ]
+   },
+   {
+    "id": "PYSEC-2026-1471",
+    "summary": "Jinja2 vulnerable to sandbox breakout through attr filter selecting format method",
+    "details": "An oversight in how the Jinja sandboxed environment interacts with the `|attr` filter allows an attacker that controls the content of a template to execute arbitrary Python code.\n\nTo exploit the vulnerability, an attacker needs to control the content of a template. Whether that is the case depends on the type of application using Jinja. This vulnerability impacts users of applications which execute untrusted templates.\n\nJinja's sandbox does catch calls to `str.format` and ensures they don't escape the sandbox. However, it's possible to use the `|attr` filter to get a reference to a string's plain format method, bypassing the sandbox. After the fix, the `|attr` filter no longer bypasses the environment's attribute lookup.",
+    "aliases": [
+     "CVE-2025-27516",
+     "GHSA-cpwx-vrp4-4pq7"
+    ],
+    "modified": "2026-07-07T17:46:43.358335981Z",
+    "published": "2026-07-07T14:34:50.446969Z",
+    "references": [
+     {
+      "type": "WEB",
+      "url": "https://github.com/pallets/jinja/security/advisories/GHSA-cpwx-vrp4-4pq7"
+     },
+     {
+      "type": "ADVISORY",
+      "url": "https://nvd.nist.gov/vuln/detail/CVE-2025-27516"
+     },
+     {
+      "type": "FIX",
+      "url": "https://github.com/pallets/jinja/commit/90457bbf33b8662926ae65cdde4c4c32e756e403"
+     },
+     {
+      "type": "PACKAGE",
+      "url": "https://github.com/pallets/jinja"
+     },
+     {
+      "type": "WEB",
+      "url": "https://lists.debian.org/debian-lts-announce/2025/04/msg00022.html"
+     },
+     {
+      "type": "WEB",
+      "url": "https://lists.debian.org/debian-lts-announce/2025/04/msg00045.html"
+     },
+     {
+      "type": "PACKAGE",
+      "url": "https://pypi.org/project/jinja2"
+     },
+     {
+      "type": "ADVISORY",
+      "url": "https://github.com/advisories/GHSA-cpwx-vrp4-4pq7"
+     }
+    ],
+    "affected": [
+     {
+      "package": {
+       "name": "jinja2",
+       "ecosystem": "PyPI",
+       "purl": "pkg:pypi/jinja2"
+      },
+      "ranges": [
+       {
+        "type": "ECOSYSTEM",
+        "events": [
+         {
+          "introduced": "0"
+         },
+         {
+          "fixed": "3.1.6"
+         }
+        ]
+       }
+      ],
+      "versions": [
+       "2.0",
+       "2.0rc1",
+       "2.1",
+       "2.1.1",
+       "2.10",
+       "2.10.1",
+       "2.10.2",
+       "2.10.3",
+       "2.11.0",
+       "2.11.1",
+       "2.11.2",
+       "2.11.3",
+       "2.2",
+       "2.2.1",
+       "2.3",
+       "2.3.1",
+       "2.4",
+       "2.4.1",
+       "2.5",
+       "2.5.1",
+       "2.5.2",
+       "2.5.3",
+       "2.5.4",
+       "2.5.5",
+       "2.6",
+       "2.7",
+       "2.7.1",
+       "2.7.2",
+       "2.7.3",
+       "2.8",
+       "2.8.1",
+       "2.9",
+       "2.9.1",
+       "2.9.2",
+       "2.9.3",
+       "2.9.4",
+       "2.9.5",
+       "2.9.6",
+       "3.0.0",
+       "3.0.0a1",
+       "3.0.0rc1",
+       "3.0.0rc2",
+       "3.0.1",
+       "3.0.2",
+       "3.0.3",
+       "3.1.0",
+       "3.1.1",
+       "3.1.2",
+       "3.1.3",
+       "3.1.4",
+       "3.1.5"
+      ],
+      "database_specific": {
+       "source": "https://github.com/pypa/advisory-database/blob/main/vulns/jinja2/PYSEC-2026-1471.yaml"
+      }
+     }
+    ],
+    "schema_version": "1.7.5",
+    "severity": [
+     {
+      "type": "CVSS_V4",
+      "score": "CVSS:4.0/AV:L/AC:L/AT:P/PR:L/UI:P/VC:H/VI:H/VA:H/SC:N/SI:N/SA:N"
+     }
+    ]
+   },
+   {
+    "id": "PYSEC-2026-1473",
+    "summary": "Jinja vulnerable to HTML attribute injection when passing user input as keys to xmlattr filter",
+    "details": "The `xmlattr` filter in affected versions of Jinja accepts keys containing spaces. XML/HTML attributes cannot contain spaces, as each would then be interpreted as a separate attribute. If an application accepts keys (as opposed to only values) as user input, and renders these in pages that other users see as well, an attacker could use this to inject other attributes and perform XSS. Note that accepting keys as user input is not common or a particularly intended use case of the `xmlattr` filter, and an application doing so should already be verifying what keys are provided regardless of this fix.",
+    "aliases": [
+     "CVE-2024-22195",
+     "GHSA-h5c8-rqwp-cp95"
+    ],
+    "modified": "2026-07-07T17:46:13.853151947Z",
+    "published": "2026-07-07T11:45:29.949639Z",
+    "references": [
+     {
+      "type": "WEB",
+      "url": "https://github.com/pallets/jinja/security/advisories/GHSA-h5c8-rqwp-cp95"
+     },
+     {
+      "type": "ADVISORY",
+      "url": "https://nvd.nist.gov/vuln/detail/CVE-2024-22195"
+     },
+     {
+      "type": "FIX",
+      "url": "https://github.com/pallets/jinja/commit/716795349a41d4983a9a4771f7d883c96ea17be7"
+     },
+     {
+      "type": "PACKAGE",
+      "url": "https://github.com/pallets/jinja"
+     },
+     {
+      "type": "WEB",
+      "url": "https://github.com/pallets/jinja/releases/tag/3.1.3"
+     },
+     {
+      "type": "WEB",
+      "url": "https://lists.debian.org/debian-lts-announce/2024/01/msg00010.html"
+     },
+     {
+      "type": "WEB",
+      "url": "https://lists.debian.org/debian-lts-announce/2024/12/msg00009.html"
+     },
+     {
+      "type": "WEB",
+      "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/5XCWZD464AJJJUBOO7CMPXQ4ROBC6JX2"
+     },
+     {
+      "type": "WEB",
+      "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/DELCVUUYX75I5K4Q5WMJG4MUZJA6VAIP"
+     },
+     {
+      "type": "WEB",
+      "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/O7YWRBX6JQCWC2XXCTZ55C7DPMGICCN3"
+     },
+     {
+      "type": "PACKAGE",
+      "url": "https://pypi.org/project/jinja2"
+     },
+     {
+      "type": "ADVISORY",
+      "url": "https://github.com/advisories/GHSA-h5c8-rqwp-cp95"
+     }
+    ],
+    "affected": [
+     {
+      "package": {
+       "name": "jinja2",
+       "ecosystem": "PyPI",
+       "purl": "pkg:pypi/jinja2"
+      },
+      "ranges": [
+       {
+        "type": "ECOSYSTEM",
+        "events": [
+         {
+          "introduced": "0"
+         },
+         {
+          "fixed": "3.1.3"
+         }
+        ]
+       }
+      ],
+      "versions": [
+       "2.0",
+       "2.0rc1",
+       "2.1",
+       "2.1.1",
+       "2.10",
+       "2.10.1",
+       "2.10.2",
+       "2.10.3",
+       "2.11.0",
+       "2.11.1",
+       "2.11.2",
+       "2.11.3",
+       "2.2",
+       "2.2.1",
+       "2.3",
+       "2.3.1",
+       "2.4",
+       "2.4.1",
+       "2.5",
+       "2.5.1",
+       "2.5.2",
+       "2.5.3",
+       "2.5.4",
+       "2.5.5",
+       "2.6",
+       "2.7",
+       "2.7.1",
+       "2.7.2",
+       "2.7.3",
+       "2.8",
+       "2.8.1",
+       "2.9",
+       "2.9.1",
+       "2.9.2",
+       "2.9.3",
+       "2.9.4",
+       "2.9.5",
+       "2.9.6",
+       "3.0.0",
+       "3.0.0a1",
+       "3.0.0rc1",
+       "3.0.0rc2",
+       "3.0.1",
+       "3.0.2",
+       "3.0.3",
+       "3.1.0",
+       "3.1.1",
+       "3.1.2"
+      ],
+      "database_specific": {
+       "source": "https://github.com/pypa/advisory-database/blob/main/vulns/jinja2/PYSEC-2026-1473.yaml"
+      }
+     }
+    ],
+    "schema_version": "1.7.5",
+    "severity": [
+     {
+      "type": "CVSS_V3",
+      "score": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:L/I:L/A:N"
+     }
+    ]
+   },
+   {
+    "id": "PYSEC-2026-1474",
+    "summary": "Jinja vulnerable to HTML attribute injection when passing user input as keys to xmlattr filter",
+    "details": "The `xmlattr` filter in affected versions of Jinja accepts keys containing non-attribute characters. XML/HTML attributes cannot contain spaces, `/`, `>`, or `=`, as each would then be interpreted as starting a separate attribute. If an application accepts keys (as opposed to only values) as user input, and renders these in pages that other users see as well, an attacker could use this to inject other attributes and perform XSS. The fix for the previous GHSA-h5c8-rqwp-cp95 CVE-2024-22195 only addressed spaces but not other characters.\n\nAccepting keys as user input is now explicitly considered an unintended use case of the `xmlattr` filter, and code that does so without otherwise validating the input should be flagged as insecure, regardless of Jinja version. Accepting _values_ as user input continues to be safe.",
+    "aliases": [
+     "CVE-2024-34064",
+     "GHSA-h75v-3vvj-5mfj"
+    ],
+    "modified": "2026-07-07T17:46:13.832160246Z",
+    "published": "2026-07-07T11:45:41.875280Z",
+    "references": [
+     {
+      "type": "WEB",
+      "url": "https://github.com/pallets/jinja/security/advisories/GHSA-h75v-3vvj-5mfj"
+     },
+     {
+      "type": "ADVISORY",
+      "url": "https://nvd.nist.gov/vuln/detail/CVE-2024-34064"
+     },
+     {
+      "type": "FIX",
+      "url": "https://github.com/pallets/jinja/commit/0668239dc6b44ef38e7a6c9f91f312fd4ca581cb"
+     },
+     {
+      "type": "PACKAGE",
+      "url": "https://github.com/pallets/jinja"
+     },
+     {
+      "type": "WEB",
+      "url": "https://lists.debian.org/debian-lts-announce/2024/12/msg00009.html"
+     },
+     {
+      "type": "WEB",
+      "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/567XIGSZMABG6TSMYWD7MIYNJSUQQRUC"
+     },
+     {
+      "type": "WEB",
+      "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/GCLF44KY43BSVMTE6S53B4V5WP3FRRSE"
+     },
+     {
+      "type": "WEB",
+      "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/SSCBHIL6BYKR5NRCBXP4XMP2CEEKGFVS"
+     },
+     {
+      "type": "WEB",
+      "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/ZALNWE3TXPPHVPSI3AZ5CTMSTAVN5UMS"
+     },
+     {
+      "type": "PACKAGE",
+      "url": "https://pypi.org/project/jinja2"
+     },
+     {
+      "type": "ADVISORY",
+      "url": "https://github.com/advisories/GHSA-h75v-3vvj-5mfj"
+     }
+    ],
+    "affected": [
+     {
+      "package": {
+       "name": "jinja2",
+       "ecosystem": "PyPI",
+       "purl": "pkg:pypi/jinja2"
+      },
+      "ranges": [
+       {
+        "type": "ECOSYSTEM",
+        "events": [
+         {
+          "introduced": "0"
+         },
+         {
+          "fixed": "3.1.4"
+         }
+        ]
+       }
+      ],
+      "versions": [
+       "2.0",
+       "2.0rc1",
+       "2.1",
+       "2.1.1",
+       "2.10",
+       "2.10.1",
+       "2.10.2",
+       "2.10.3",
+       "2.11.0",
+       "2.11.1",
+       "2.11.2",
+       "2.11.3",
+       "2.2",
+       "2.2.1",
+       "2.3",
+       "2.3.1",
+       "2.4",
+       "2.4.1",
+       "2.5",
+       "2.5.1",
+       "2.5.2",
+       "2.5.3",
+       "2.5.4",
+       "2.5.5",
+       "2.6",
+       "2.7",
+       "2.7.1",
+       "2.7.2",
+       "2.7.3",
+       "2.8",
+       "2.8.1",
+       "2.9",
+       "2.9.1",
+       "2.9.2",
+       "2.9.3",
+       "2.9.4",
+       "2.9.5",
+       "2.9.6",
+       "3.0.0",
+       "3.0.0a1",
+       "3.0.0rc1",
+       "3.0.0rc2",
+       "3.0.1",
+       "3.0.2",
+       "3.0.3",
+       "3.1.0",
+       "3.1.1",
+       "3.1.2",
+       "3.1.3"
+      ],
+      "database_specific": {
+       "source": "https://github.com/pypa/advisory-database/blob/main/vulns/jinja2/PYSEC-2026-1474.yaml"
+      }
+     }
+    ],
+    "schema_version": "1.7.5",
+    "severity": [
+     {
+      "type": "CVSS_V3",
+      "score": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:L/I:L/A:N"
+     }
+    ]
+   },
+   {
+    "id": "PYSEC-2026-1475",
+    "summary": "Jinja has a sandbox breakout through indirect reference to format method",
+    "details": "An oversight in how the Jinja sandboxed environment detects calls to `str.format` allows an attacker that controls the content of a template to execute arbitrary Python code.\n\nTo exploit the vulnerability, an attacker needs to control the content of a template. Whether that is the case depends on the type of application using Jinja. This vulnerability impacts users of applications which execute untrusted templates.\n\nJinja's sandbox does catch calls to `str.format` and ensures they don't escape the sandbox. However, it's possible to store a reference to a malicious string's `format` method, then pass that to a filter that calls it. No such filters are built-in to Jinja, but could be present through custom filters in an application. After the fix, such indirect calls are also handled by the sandbox.",
+    "aliases": [
+     "CVE-2024-56326",
+     "GHSA-q2x7-8rv6-6q7h"
+    ],
+    "modified": "2026-07-07T17:46:13.842466429Z",
+    "published": "2026-07-07T14:34:47.732576Z",
+    "references": [
+     {
+      "type": "WEB",
+      "url": "https://github.com/pallets/jinja/security/advisories/GHSA-q2x7-8rv6-6q7h"
+     },
+     {
+      "type": "ADVISORY",
+      "url": "https://nvd.nist.gov/vuln/detail/CVE-2024-56326"
+     },
+     {
+      "type": "FIX",
+      "url": "https://github.com/pallets/jinja/commit/48b0687e05a5466a91cd5812d604fa37ad0943b4"
+     },
+     {
+      "type": "PACKAGE",
+      "url": "https://github.com/pallets/jinja"
+     },
+     {
+      "type": "WEB",
+      "url": "https://github.com/pallets/jinja/releases/tag/3.1.5"
+     },
+     {
+      "type": "WEB",
+      "url": "https://lists.debian.org/debian-lts-announce/2025/04/msg00022.html"
+     },
+     {
+      "type": "PACKAGE",
+      "url": "https://pypi.org/project/jinja2"
+     },
+     {
+      "type": "ADVISORY",
+      "url": "https://github.com/advisories/GHSA-q2x7-8rv6-6q7h"
+     }
+    ],
+    "affected": [
+     {
+      "package": {
+       "name": "jinja2",
+       "ecosystem": "PyPI",
+       "purl": "pkg:pypi/jinja2"
+      },
+      "ranges": [
+       {
+        "type": "ECOSYSTEM",
+        "events": [
+         {
+          "introduced": "0"
+         },
+         {
+          "fixed": "3.1.5"
+         }
+        ]
+       }
+      ],
+      "versions": [
+       "2.0",
+       "2.0rc1",
+       "2.1",
+       "2.1.1",
+       "2.10",
+       "2.10.1",
+       "2.10.2",
+       "2.10.3",
+       "2.11.0",
+       "2.11.1",
+       "2.11.2",
+       "2.11.3",
+       "2.2",
+       "2.2.1",
+       "2.3",
+       "2.3.1",
+       "2.4",
+       "2.4.1",
+       "2.5",
+       "2.5.1",
+       "2.5.2",
+       "2.5.3",
+       "2.5.4",
+       "2.5.5",
+       "2.6",
+       "2.7",
+       "2.7.1",
+       "2.7.2",
+       "2.7.3",
+       "2.8",
+       "2.8.1",
+       "2.9",
+       "2.9.1",
+       "2.9.2",
+       "2.9.3",
+       "2.9.4",
+       "2.9.5",
+       "2.9.6",
+       "3.0.0",
+       "3.0.0a1",
+       "3.0.0rc1",
+       "3.0.0rc2",
+       "3.0.1",
+       "3.0.2",
+       "3.0.3",
+       "3.1.0",
+       "3.1.1",
+       "3.1.2",
+       "3.1.3",
+       "3.1.4"
+      ],
+      "database_specific": {
+       "source": "https://github.com/pypa/advisory-database/blob/main/vulns/jinja2/PYSEC-2026-1475.yaml"
+      }
+     }
+    ],
+    "schema_version": "1.7.5",
+    "severity": [
+     {
+      "type": "CVSS_V3",
+      "score": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H"
+     },
+     {
+      "type": "CVSS_V4",
+      "score": "CVSS:4.0/AV:L/AC:L/AT:P/PR:L/UI:P/VC:H/VI:H/VA:H/SC:N/SI:N/SA:N"
+     }
+    ]
+   }
+  ]
+ },
+ "deps.dev": {
+  "version": {
+   "versionKey": {
+    "system": "PYPI",
+    "name": "jinja2",
+    "version": "2.11.3"
+   },
+   "publishedAt": "2021-01-31T16:33:07Z",
+   "isDefault": false,
+   "isDeprecated": false,
+   "deprecatedReason": "",
+   "licenses": [
+    "BSD-3-Clause"
+   ],
+   "advisoryKeys": [
+    {
+     "id": "GHSA-cpwx-vrp4-4pq7"
+    },
+    {
+     "id": "GHSA-h5c8-rqwp-cp95"
+    },
+    {
+     "id": "GHSA-h75v-3vvj-5mfj"
+    },
+    {
+     "id": "GHSA-q2x7-8rv6-6q7h"
+    },
+    {
+     "id": "PYSEC-2026-1471"
+    },
+    {
+     "id": "PYSEC-2026-1473"
+    },
+    {
+     "id": "PYSEC-2026-1474"
+    },
+    {
+     "id": "PYSEC-2026-1475"
+    }
+   ],
+   "links": [
+    {
+     "label": "DOCUMENTATION",
+     "url": "https://jinja.palletsprojects.com/"
+    },
+    {
+     "label": "ISSUE_TRACKER",
+     "url": "https://github.com/pallets/jinja/issues"
+    },
+    {
+     "label": "SOURCE_REPO",
+     "url": "https://github.com/pallets/jinja"
+    }
+   ],
+   "slsaProvenances": [],
+   "attestations": [],
+   "registries": [
+    "https://pypi.org/simple"
+   ],
+   "relatedProjects": [
+    {
+     "projectKey": {
+      "id": "github.com/pallets/jinja"
+     },
+     "relationProvenance": "UNVERIFIED_METADATA",
+     "relationType": "ISSUE_TRACKER"
+    },
+    {
+     "projectKey": {
+      "id": "github.com/pallets/jinja"
+     },
+     "relationProvenance": "UNVERIFIED_METADATA",
+     "relationType": "SOURCE_REPO"
+    }
+   ],
+   "projectStatus": {
+    "status": "active",
+    "reason": ""
+   }
+  },
+  "project": {
+   "projectKey": {
+    "id": "github.com/pallets/jinja"
+   },
+   "openIssuesCount": 105,
+   "starsCount": 11792,
+   "forksCount": 1856,
+   "license": "BSD-3-Clause",
+   "description": "A very fast and expressive template engine.",
+   "homepage": "https://jinja.palletsprojects.com",
+   "scorecard": {
+    "date": "2026-08-24T00:00:00Z",
+    "repository": {
+     "name": "github.com/pallets/jinja",
+     "commit": "5ef70112a1ff19c05324ff889dd30405b1002044"
+    },
+    "scorecard": {
+     "version": "v5.5.1-0.20260815060127-d1fab88f5463",
+     "commit": "d1fab88f54636ff366076edfc5c239f97b3c8e66"
+    },
+    "checks": [
+     {
+      "name": "Dangerous-Workflow",
+      "documentation": {
+       "shortDescription": "Determines if the project's GitHub Action workflows avoid dangerous patterns.",
+       "url": "https://github.com/ossf/scorecard/blob/d1fab88f54636ff366076edfc5c239f97b3c8e66/docs/checks.md#dangerous-workflow"
+      },
+      "score": 10,
+      "reason": "no dangerous workflow patterns detected",
+      "details": []
+     },
+     {
+      "name": "Maintained",
+      "documentation": {
+       "shortDescription": "Determines if the project is \"actively maintained\".",
+       "url": "https://github.com/ossf/scorecard/blob/d1fab88f54636ff366076edfc5c239f97b3c8e66/docs/checks.md#maintained"
+      },
+      "score": 5,
+      "reason": "0 commit(s) and 7 issue activity found in the last 90 days -- score normalized to 5",
+      "details": []
+     },
+     {
+      "name": "Code-Review",
+      "documentation": {
+       "shortDescription": "Determines if the project requires human code review before pull requests (aka merge requests) are merged.",
+       "url": "https://github.com/ossf/scorecard/blob/d1fab88f54636ff366076edfc5c239f97b3c8e66/docs/checks.md#code-review"
+      },
+      "score": 0,
+      "reason": "Found 1/18 approved changesets -- score normalized to 0",
+      "details": []
+     },
+     {
+      "name": "Binary-Artifacts",
+      "documentation": {
+       "shortDescription": "Determines if the project has generated executable (binary) artifacts in the source repository.",
+       "url": "https://github.com/ossf/scorecard/blob/d1fab88f54636ff366076edfc5c239f97b3c8e66/docs/checks.md#binary-artifacts"
+      },
+      "score": 10,
+      "reason": "no binaries found in the repo",
+      "details": []
+     },
+     {
+      "name": "Token-Permissions",
+      "documentation": {
+       "shortDescription": "Determines if the project's workflows follow the principle of least privilege.",
+       "url": "https://github.com/ossf/scorecard/blob/d1fab88f54636ff366076edfc5c239f97b3c8e66/docs/checks.md#token-permissions"
+      },
+      "score": 0,
+      "reason": "detected GitHub workflow tokens with excessive permissions",
+      "details": [
+       "Warn: jobLevel 'contents' permission set to 'write': .github/workflows/publish.yaml:26",
+       "Warn: no topLevel permission defined: .github/workflows/pre-commit.yaml:1",
+       "Warn: no topLevel permission defined: .github/workflows/publish.yaml:1",
+       "Warn: no topLevel permission defined: .github/workflows/tests.yaml:1"
+      ]
+     },
+     {
+      "name": "Pinned-Dependencies",
+      "documentation": {
+       "shortDescription": "Determines if the project has declared and pinned the dependencies of its build process.",
+       "url": "https://github.com/ossf/scorecard/blob/d1fab88f54636ff366076edfc5c239f97b3c8e66/docs/checks.md#pinned-dependencies"
+      },
+      "score": 8,
+      "reason": "dependency not pinned by hash detected -- score normalized to 8",
+      "details": [
+       "Info: Possibly incomplete results: error parsing shell code: invalid parameter name: .github/workflows/tests.yaml:32",
+       "Warn: downloadThenRun not pinned by hash: .devcontainer/on-create-command.sh:7",
+       "Info:  13 out of  13 GitHub-owned GitHubAction dependencies pinned",
+       "Info:   7 out of   7 third-party GitHubAction dependencies pinned",
+       "Info:   0 out of   1 downloadThenRun dependencies pinned"
+      ]
+     },
+     {
+      "name": "CII-Best-Practices",
+      "documentation": {
+       "shortDescription": "Determines if the project has an OpenSSF (formerly CII) Best Practices Badge.",
+       "url": "https://github.com/ossf/scorecard/blob/d1fab88f54636ff366076edfc5c239f97b3c8e66/docs/checks.md#cii-best-practices"
+      },
+      "score": 0,
+      "reason": "no effort to earn an OpenSSF best practices badge detected",
+      "details": []
+     },
+     {
+      "name": "Fuzzing",
+      "documentation": {
+       "shortDescription": "Determines if the project uses fuzzing.",
+       "url": "https://github.com/ossf/scorecard/blob/d1fab88f54636ff366076edfc5c239f97b3c8e66/docs/checks.md#fuzzing"
+      },
+      "score": 10,
+      "reason": "project is fuzzed",
+      "details": [
+       "Info: OSSFuzz integration found"
+      ]
+     },
+     {
+      "name": "License",
+      "documentation": {
+       "shortDescription": "Determines if the project has defined a license.",
+       "url": "https://github.com/ossf/scorecard/blob/d1fab88f54636ff366076edfc5c239f97b3c8e66/docs/checks.md#license"
+      },
+      "score": 10,
+      "reason": "license file detected",
+      "details": [
+       "Info: project has a license file: LICENSE.txt:0",
+       "Info: FSF or OSI recognized license: BSD 3-Clause \"New\" or \"Revised\" License: LICENSE.txt:0"
+      ]
+     },
+     {
+      "name": "Packaging",
+      "documentation": {
+       "shortDescription": "Determines if the project is published as a package that others can easily download, install, easily update, and uninstall.",
+       "url": "https://github.com/ossf/scorecard/blob/d1fab88f54636ff366076edfc5c239f97b3c8e66/docs/checks.md#packaging"
+      },
+      "score": -1,
+      "reason": "packaging workflow not detected",
+      "details": [
+       "Warn: no GitHub/GitLab publishing workflow detected."
+      ]
+     },
+     {
+      "name": "Signed-Releases",
+      "documentation": {
+       "shortDescription": "Determines if the project cryptographically signs release artifacts.",
+       "url": "https://github.com/ossf/scorecard/blob/d1fab88f54636ff366076edfc5c239f97b3c8e66/docs/checks.md#signed-releases"
+      },
+      "score": 10,
+      "reason": "4 out of the last 4 releases have a total of 4 signed artifacts.",
+      "details": [
+       "Info: provenance for release artifact: multiple.intoto.jsonl: https://github.com/pallets/jinja/releases/tag/3.1.6",
+       "Info: provenance for release artifact: multiple.intoto.jsonl: https://github.com/pallets/jinja/releases/tag/3.1.5",
+       "Info: provenance for release artifact: multiple.intoto.jsonl: https://github.com/pallets/jinja/releases/tag/3.1.4",
+       "Info: provenance for release artifact: multiple.intoto.jsonl: https://github.com/pallets/jinja/releases/tag/3.1.3"
+      ]
+     },
+     {
+      "name": "Branch-Protection",
+      "documentation": {
+       "shortDescription": "Determines if the default and release branches are protected with GitHub's branch protection settings.",
+       "url": "https://github.com/ossf/scorecard/blob/d1fab88f54636ff366076edfc5c239f97b3c8e66/docs/checks.md#branch-protection"
+      },
+      "score": 3,
+      "reason": "branch protection is not maximal on development and all release branches",
+      "details": [
+       "Info: 'allow deletion' disabled on branch 'main'",
+       "Info: 'force pushes' disabled on branch 'main'",
+       "Warn: 'branch protection settings apply to administrators' is disabled on branch 'main'",
+       "Warn: could not determine whether codeowners review is allowed",
+       "Warn: no status checks found to merge onto branch 'main'",
+       "Warn: PRs are not required to make changes on branch 'main'; or we don't have data to detect it.If you think it might be the latter, make sure to run Scorecard with a PAT or use Repo Rules (that are always public) instead of Branch Protection settings"
+      ]
+     },
+     {
+      "name": "Security-Policy",
+      "documentation": {
+       "shortDescription": "Determines if the project has published a security policy.",
+       "url": "https://github.com/ossf/scorecard/blob/d1fab88f54636ff366076edfc5c239f97b3c8e66/docs/checks.md#security-policy"
+      },
+      "score": 9,
+      "reason": "security policy file detected",
+      "details": [
+       "Info: security policy file detected: github.com/pallets/.github/SECURITY.md:1",
+       "Info: Found linked content: github.com/pallets/.github/SECURITY.md:1",
+       "Warn: One or no descriptive hints of disclosure, vulnerability, and/or timelines in security policy",
+       "Info: Found text in security policy: github.com/pallets/.github/SECURITY.md:1"
+      ]
+     },
+     {
+      "name": "SAST",
+      "documentation": {
+       "shortDescription": "Determines if the project uses static code analysis.",
+       "url": "https://github.com/ossf/scorecard/blob/d1fab88f54636ff366076edfc5c239f97b3c8e66/docs/checks.md#sast"
+      },
+      "score": 0,
+      "reason": "SAST tool is not run on all commits -- score normalized to 0",
+      "details": [
+       "Warn: 0 commits out of 21 are checked with a SAST tool"
+      ]
+     }
+    ],
+    "overallScore": 5.9,
+    "metadata": []
+   },
+   "ossFuzz": {
+    "lineCount": 6028,
+    "lineCoverCount": 4253,
+    "date": "2026-10-13T00:00:00Z",
+    "configUrl": "https://github.com/google/oss-fuzz/tree/master/projects/jinja2"
+   }
+  },
+  "releases": {
+   "2.11.3": {
+    "published": "2021-01-31T16:33:07Z",
+    "default": false,
+    "deprecated": false
+   },
+   "3.1.6": {
+    "published": "2025-03-05T20:05:00Z",
+    "default": true,
+    "deprecated": false
+   }
+  }
+ },
+ "errors": {}
+}

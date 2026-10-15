@@ -1,0 +1,137 @@
+{#- Capsule report as one standalone page. Owner: Khush. Same content as capsule.md.j2. -#}
+{% macro tag(t) %}<span class="tag {{ t | lower }}">{{ t }}</span>{% endmacro %}
+{% macro links(paths) %}{% for p in paths %} <a class="ev" href="{{ p }}">{{ p }}</a>{% endfor %}{% endmacro %}
+{% macro row(r) %}{{ tag(r.tag) }} {{ r.text }}{{ links(r.links) }}{% endmacro %}
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Exit Capsule: {{ c.dependency.name }}</title>
+<style>
+  :root { --bg: #fbfaf8; --fg: #1d1d1f; --muted: #6b6b70; --line: #e4e2dd; --card: #ffffff;
+          --obs: #0b6e4f; --obs-bg: #dff3ea; --ai: #7a3db8; --ai-bg: #efe4fa;
+          --ok: #0b6e4f; --mid: #9a6700; --bad: #b42318; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #151517; --fg: #ececee; --muted: #a0a0a8; --line: #2c2c31; --card: #1c1c1f;
+            --obs: #6fd3a8; --obs-bg: #12352a; --ai: #c9a3f2; --ai-bg: #2f2142;
+            --ok: #6fd3a8; --mid: #f0c060; --bad: #ff8a80; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--fg); font: 15px/1.55 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  main { max-width: 1080px; margin: 0 auto; padding: 32px 16px 64px; }
+  h1 { font-size: 26px; margin: 0 0 4px; }
+  h2 { font-size: 17px; margin: 36px 0 10px; padding-bottom: 6px; border-bottom: 1px solid var(--line); }
+  h3 { font-size: 15px; margin: 18px 0 6px; }
+  .sub, .muted { color: var(--muted); }
+  .verdict { margin: 20px 0; padding: 16px 18px; border-radius: 10px; background: var(--card); border: 1px solid var(--line); border-left: 6px solid var(--mid); }
+  .verdict.accepted { border-left-color: var(--ok); } .verdict.rejected { border-left-color: var(--bad); }
+  .verdict strong { font-size: 20px; display: block; margin-bottom: 4px; }
+  .tag { display: inline-block; font: 600 11px/1 ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .04em; padding: 4px 6px; border-radius: 4px; vertical-align: 1px; }
+  .tag.observed { color: var(--obs); background: var(--obs-bg); } .tag.ai { color: var(--ai); background: var(--ai-bg); }
+  a.ev { font: 12px ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--muted); }
+  ul { padding-left: 20px; } li { margin: 4px 0; }
+  .scroll { overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; background: var(--card); border: 1px solid var(--line); border-radius: 8px; font-size: 14px; }
+  th, td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { font-weight: 600; color: var(--muted); white-space: nowrap; }
+  code { font: 13px ui-monospace, SFMono-Regular, Menlo, monospace; overflow-wrap: anywhere; }
+  .fixed { color: var(--ok); font-weight: 600; } .broken { color: var(--bad); font-weight: 600; }
+  .note { border-left: 3px solid var(--line); padding: 2px 10px; margin: 14px 0; color: var(--muted); }
+</style>
+</head>
+<body>
+<main>
+<h1>Dependency Exit Capsule: {{ c.dependency.name }}</h1>
+<div class="sub">{{ title }} · tested on Python {{ c.repo.python_version or "unknown" }} · made {{ c.created_at.strftime("%Y-%m-%d %H:%M UTC") }} by Tranceplant {{ c.tool_version }}</div>
+
+<div class="verdict {{ verdict | lower }}"><strong>Verdict: {{ verdict }}</strong>{{ row(reason) }}</div>
+<p class="note">Every line is tagged. {{ tag("OBSERVED") }} means Tranceplant ran or read it, and it links to the file it came from. {{ tag("AI") }} means Gemma 4 suggested it and nobody has verified it yet. The verdict comes from fixed rules over the test results, never from the model.</p>
+
+{% if claims %}
+<h2>Headline</h2>
+<ul>{% for r in claims %}<li>{{ row(r) }}</li>{% endfor %}</ul>
+{% endif %}
+
+<h2>Dependency details {{ tag("OBSERVED") }}</h2>
+<ul>
+  <li>Package <code>{{ c.dependency.name }}</code>, pinned at {{ c.dependency.pinned or "nothing (unpinned)" }}</li>
+  {% for d in declared %}<li>Declared in <code>{{ d.file }}{{ ":" ~ d.line if d.line }}</code> as <code>{{ d.spec }}</code></li>
+  {% else %}<li>Not declared anywhere{{ " (imported but undeclared)" if c.dependency.imported_but_undeclared }}</li>{% endfor %}
+  <li>Repo <code>{{ c.repo.path }}</code>{% if c.repo.commit %} at commit <code>{{ c.repo.commit }}</code>{% endif %}</li>
+</ul>
+
+<h2>Risk indicators</h2>
+<div class="scroll"><table>
+  <tr><th>Indicator {{ tag("OBSERVED") }}</th><th>Value</th></tr>
+  {% for k, v in facts %}<tr><td>{{ k }}</td><td>{{ v }}</td></tr>{% endfor %}
+</table></div>
+<ul>
+  {% for r in findings %}<li>{{ row(r) }}</li>{% endfor %}
+  {% if ai_summary %}<li>{{ row(ai_summary) }}{% if c.risk.ai_severity %} Severity: <strong>{{ c.risk.ai_severity }}</strong>.{% endif %}</li>{% endif %}
+</ul>
+
+<h2>Usage locations {{ tag("OBSERVED") }}</h2>
+{% if usages %}
+<div class="scroll"><table>
+  <tr><th>Where</th><th>Kind</th><th>Symbol</th><th>Code</th><th>Note</th></tr>
+  {% for u in usages %}<tr><td><code>{{ u.file }}:{{ u.line }}</code></td><td>{{ u.kind }}</td><td><code>{{ u.symbol }}</code></td><td><code>{{ u.code.strip() }}</code></td><td>{% if u.note %}{{ tag("AI") }} {{ u.note.claim }}{{ links(u.note.evidence) }}{% endif %}</td></tr>{% endfor %}
+</table></div>
+{% else %}<p class="muted">The repo never imports or runs this dependency.</p>{% endif %}
+
+<h2>Proposed replacement {{ tag("AI") }}</h2>
+<ul>
+  <li><strong>{{ proposal.action }}</strong> {{ c.dependency.name }} to <strong>{{ proposal.replacement or "nothing" }}</strong>{% if proposal.target_spec %} (<code>{{ proposal.target_spec }}</code>){% endif %}, proposed by <code>{{ proposal.model }}</code></li>
+  <li>{{ row(reasoning) }}</li>
+  {% for a in proposal.alternatives %}<li>{{ tag("AI") }} Alternative not chosen: {{ a.name }}{{ ": " ~ a.why_not if a.why_not }}</li>{% endfor %}
+</ul>
+
+<h2>Migration steps and patch</h2>
+<p>The final patch is <a href="migration.patch">migration.patch</a>, ready for <code>git apply</code>.</p>
+{% for m in attempts %}
+<h3>{{ m.label | capitalize }}</h3>
+<ul>
+  {% if m.diagnosis %}<li>{{ row(m.diagnosis) }}</li>{% endif %}
+  {% for s in m.steps %}<li>{{ row(s) }}</li>{% endfor %}
+  <li>{{ row(m.applies) }}</li>
+  <li>Files changed: {% for f in m.files %}<code>{{ f }}</code>{{ ", " if not loop.last }}{% else %}none{% endfor %}; patch <a href="{{ m.patch }}">{{ m.patch }}</a></li>
+</ul>
+{% endfor %}
+
+<h2>Executed test results {{ tag("OBSERVED") }}</h2>
+<div class="scroll"><table>
+  <tr><th>Side</th><th>Backend</th><th>Python</th><th>Exit code</th><th>Setup</th><th>Results</th><th>Evidence</th></tr>
+  {% for s in sides %}<tr><td>{{ s.label }}</td><td>{{ s.backend }}</td><td>{{ s.python_version or "-" }}</td><td>{{ s.exit_code if s.exit_code is not none else "-" }}</td><td>{{ "ok" if s.setup_ok else "failed" }}</td><td>{{ s.results | selectattr("outcome", "equalto", "passed") | list | length }}/{{ s.results | length }} passed</td><td>{% if s.junit_file %}<a class="ev" href="{{ s.junit_file }}">junit</a>{% endif %} {% if s.log_file %}<a class="ev" href="{{ s.log_file }}">log</a>{% endif %}</td></tr>{% endfor %}
+</table></div>
+<p>{% for label, n, field in counts %}<span class="{{ 'fixed' if n and field == 'newly_fixed' else 'broken' if n and field == 'regressions' }}">{{ n }} {{ label }}</span>{{ " · " if not loop.last }}{% endfor %}</p>
+<div class="scroll"><table>
+  <tr><th>Test</th><th>Original</th><th>After swap</th><th>Change</th></tr>
+  {% for t in tests %}<tr><td><code>{{ t.name }}</code></td><td>{{ t.control }}</td><td>{{ t.donor }}</td><td class="{{ 'fixed' if t.field == 'newly_fixed' else 'broken' if t.field == 'regressions' }}">{{ t.change }}{% if t.message %}: {{ t.message }}{% endif %}</td></tr>{% endfor %}
+</table></div>
+
+<h2>Compatibility gaps</h2>
+<ul>{% for g in gaps %}<li>{{ tag(g.tag) }} <strong>{{ g.severity }}, {{ g.status }}</strong>: {{ g.text }}{% if g.tests %} Tests: {{ g.tests | join(", ") }}.{% endif %}{{ links(g.links) }}</li>{% else %}<li>No gaps found.</li>{% endfor %}</ul>
+
+<h2>Suggested tests</h2>
+<ul>{% for t in suggested %}<li>{{ tag(t.tag) }} <strong>{{ t.name }}</strong>: {{ t.purpose }} <span class="muted">({{ "ran" if t.ran else "not run" }})</span></li>{% else %}<li>None suggested.</li>{% endfor %}</ul>
+
+<h2>Open concerns and limitations</h2>
+<ul>
+  {% for r in concerns %}<li>{{ row(r) }}</li>{% endfor %}
+</ul>
+<p class="muted">Known limitations, the same in every capsule:</p>
+<ul>{% for l in limitations %}<li>{{ l }}</li>{% endfor %}</ul>
+
+<h2>Replay</h2>
+<p>Run <code>./replay.sh</code> in this folder to re-run both sides and check every test still matches. Add <code>--repo PATH</code> if the repo has moved.</p>
+
+<h2>Gemma 4</h2>
+<p>{{ gemma.model_family }} ({{ gemma.models | join(", ") or "no models called" }}) accessed through {{ gemma.access }}. {{ gemma.calls }} API call(s), {{ gemma.cache_hits }} cache hit(s). Terms: {{ gemma.terms }}.</p>
+{% if missing %}
+<h2>Evidence check</h2>
+<p>These files are cited above but are missing from this folder:</p>
+<ul>{% for p in missing %}<li><code>{{ p }}</code></li>{% endfor %}</ul>
+{% endif %}
+</main>
+</body>
+</html>

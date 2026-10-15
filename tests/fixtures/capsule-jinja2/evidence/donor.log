@@ -1,0 +1,13 @@
+$ git apply /tmp/claude-1000/-home-dcxiii-Desktop-Projects-Tranceplant/e7abfa90-3058-4898-9b92-48d68e943b2d/scratchpad/cp-work/capsules/jinja2/migration.round0.patch
+exit: 0
+$ docker run --rm -v /tmp/claude-1000/-home-dcxiii-Desktop-Projects-Tranceplant/e7abfa90-3058-4898-9b92-48d68e943b2d/scratchpad/cp-work/capsules/jinja2/work/donor.round0:/repo -v /tmp/claude-1000/-home-dcxiii-Desktop-Projects-Tranceplant/e7abfa90-3058-4898-9b92-48d68e943b2d/scratchpad/cp-work/capsules/jinja2/evidence:/evidence -v tranceplant-uv-cache:/root/.cache/uv -e UV_LINK_MODE=copy -e UV_PYTHON_DOWNLOADS=never -w /repo tranceplant-sandbox sh -c uv venv -q /tmp/venv --python python3.12 && uv pip install -q -p /tmp/venv -r requirements.txt -r requirements-dev.txt || exit 97; /tmp/venv/bin/python -c 'import platform; print(platform.platform())'; /tmp/venv/bin/python -m pytest -q -p no:cacheprovider --junitxml=/evidence/donor.round0.junit.xml
+Linux-7.2.9-201.fc44.x86_64-x86_64-with-glibc2.41
+..........                                                               [100%]
+=============================== warnings summary ===============================
+linkwatch/resources.py:1
+  /repo/linkwatch/resources.py:1: DeprecationWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html
+    import pkg_resources
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+10 passed, 1 warning in 6.55s
+exit: 0

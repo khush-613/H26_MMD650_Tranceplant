@@ -1,0 +1,19 @@
+{
+ "source": "AI",
+ "job": "annotate_usages",
+ "model": "gemma-4-26b-a4b-it",
+ "origin": "fake",
+ "attempts": 1,
+ "cache_key": "0b943fa9a853752b00028288364da98b3682dcb3b033ee7586cdac55862f554d",
+ "created_at": "2026-10-15T10:05:37+00:00",
+ "prompt": "You are reviewing how a Python repository uses the dependency \"jinja2\" before it is replaced (planned replacement: Jinja2).\n\nFor each usage below, write one short sentence on why it matters for the swap: what could break, what has to change, or why it is harmless. Pay special attention to aliased imports, private functions (names starting with \"_\"), monkeypatches done at import time and hidden partner libraries, because a plain text search misses them.\n\nReturn exactly one note per usage, using its [n] number as \"index\".\n\nUsages:\n[1] linkwatch/report.py:3 from_import jinja2.Environment :: from jinja2 import Environment, FileSystemLoader, select_autoescape\n[2] linkwatch/report.py:3 from_import jinja2.FileSystemLoader :: from jinja2 import Environment, FileSystemLoader, select_autoescape\n[3] linkwatch/report.py:3 from_import jinja2.select_autoescape :: from jinja2 import Environment, FileSystemLoader, select_autoescape\n[4] linkwatch/report.py:9 attribute jinja2.Environment :: return Environment(\n[5] linkwatch/report.py:10 attribute jinja2.FileSystemLoader :: loader=FileSystemLoader(template_dir()),\n[6] linkwatch/report.py:11 attribute jinja2.select_autoescape :: autoescape=select_autoescape([\"html\", \"j2\"]),\n[7] requirements.txt:4 transitive MarkupSafe>=0.23 :: Jinja2==2.11.3\n\nReply with a single JSON object and nothing else: no prose, no markdown.\nIt must validate against this JSON Schema:\n{\n \"$defs\": {\n  \"UsageNote\": {\n   \"properties\": {\n    \"index\": {\n     \"description\": \"the [n] number of the usage in the list\",\n     \"title\": \"Index\",\n     \"type\": \"integer\"\n    },\n    \"note\": {\n     \"description\": \"one sentence on why this usage matters for the swap\",\n     \"title\": \"Note\",\n     \"type\": \"string\"\n    }\n   },\n   \"required\": [\n    \"index\",\n    \"note\"\n   ],\n   \"title\": \"UsageNote\",\n   \"type\": \"object\"\n  }\n },\n \"properties\": {\n  \"notes\": {\n   \"items\": {\n    \"$ref\": \"#/$defs/UsageNote\"\n   },\n   \"title\": \"Notes\",\n   \"type\": \"array\"\n  }\n },\n \"required\": [\n  \"notes\"\n ],\n \"title\": \"UsageNotes\",\n \"type\": \"object\"\n}",
+ "raw_response": "{\n \"notes\": [\n  {\n   \"index\": 1,\n   \"note\": \"Direct use of the library; the replacement must offer the same name or this line changes.\"\n  }\n ]\n}\n",
+ "parsed": {
+  "notes": [
+   {
+    "index": 1,
+    "note": "Direct use of the library; the replacement must offer the same name or this line changes."
+   }
+  ]
+ }
+}

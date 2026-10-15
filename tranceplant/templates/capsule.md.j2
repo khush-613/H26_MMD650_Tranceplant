@@ -1,1 +1,143 @@
-{# Capsule report template. Owner: Khush. #}
+{#- Capsule report. Owner: Khush. Every line carries its source tag; links are relative to this folder. -#}
+{% macro links(paths) %}{% if paths %} ({% for p in paths %}[{{ p }}]({{ p }}){{ ", " if not loop.last }}{% endfor %}){% endif %}{% endmacro %}
+{% macro row(r) %}`{{ r.tag }}` {{ r.text }}{{ links(r.links) }}{% endmacro %}
+# Dependency Exit Capsule: {{ c.dependency.name }}
+
+**Verdict: {{ verdict }}** {{ row(reason) }}
+
+{{ title }} · tested on Python {{ c.repo.python_version or "unknown" }} · made {{ c.created_at.strftime("%Y-%m-%d %H:%M UTC") }} by Tranceplant {{ c.tool_version }}
+
+> Every line is tagged. `OBSERVED` means Tranceplant ran or read it, and it links to the file it came from. `AI` means Gemma 4 suggested it and nobody has verified it yet. The verdict comes from fixed rules over the test results, never from the model.
+
+{% if claims %}
+## Headline
+
+{% for r in claims %}
+- {{ row(r) }}
+{% endfor %}
+
+{% endif %}
+## Dependency details `OBSERVED`
+
+- Package: `{{ c.dependency.name }}`, pinned at {{ c.dependency.pinned or "nothing (unpinned)" }}
+{% for d in declared %}
+- Declared in `{{ d.file }}{{ ":" ~ d.line if d.line }}` as `{{ d.spec }}`
+{% else %}
+- Not declared anywhere{{ " (imported but undeclared)" if c.dependency.imported_but_undeclared }}
+{% endfor %}
+- Repo: `{{ c.repo.path }}`{{ " at commit `" ~ c.repo.commit ~ "`" if c.repo.commit }}
+
+## Risk indicators
+
+| Indicator `OBSERVED` | Value |
+| --- | --- |
+{% for k, v in facts %}
+| {{ k }} | {{ v | cell }} |
+{% endfor %}
+
+{% for r in findings %}
+- {{ row(r) }}
+{% endfor %}
+{% if ai_summary %}
+- {{ row(ai_summary) }}{{ " Severity: " ~ c.risk.ai_severity ~ "." if c.risk.ai_severity }}
+{% endif %}
+
+## Usage locations `OBSERVED`
+
+{% if usages %}
+| Where | Kind | Symbol | Code | Note |
+| --- | --- | --- | --- | --- |
+{% for u in usages %}
+| `{{ u.file }}:{{ u.line }}` | {{ u.kind }} | `{{ u.symbol | cell }}` | `{{ u.code.strip() | cell }}` | {% if u.note %}`AI` {{ u.note.claim | cell }}{{ links(u.note.evidence) }}{% endif %} |
+{% endfor %}
+{% else %}
+The repo never imports or runs this dependency.
+{% endif %}
+
+## Proposed replacement `AI`
+
+- **{{ proposal.action }}** {{ c.dependency.name }} to **{{ proposal.replacement or "nothing" }}**{{ " (`" ~ proposal.target_spec ~ "`)" if proposal.target_spec }}, proposed by `{{ proposal.model }}`
+- {{ row(reasoning) }}
+{% for a in proposal.alternatives %}
+- `AI` Alternative not chosen: {{ a.name }}{{ ": " ~ a.why_not if a.why_not }}
+{% endfor %}
+
+## Migration steps and patch
+
+The final patch is [migration.patch](migration.patch), ready for `git apply`.
+
+{% for m in attempts %}
+### {{ m.label | capitalize }}
+
+{% if m.diagnosis %}
+- {{ row(m.diagnosis) }}
+{% endif %}
+{% for s in m.steps %}
+- {{ row(s) }}
+{% endfor %}
+- {{ row(m.applies) }}
+- Files changed: {% for f in m.files %}`{{ f }}`{{ ", " if not loop.last }}{% else %}none{% endfor %}; patch: [{{ m.patch }}]({{ m.patch }})
+
+{% endfor %}
+## Executed test results `OBSERVED`
+
+| Side | Backend | Python | Exit code | Setup | Results | Evidence |
+| --- | --- | --- | --- | --- | --- | --- |
+{% for s in sides %}
+| {{ s.label }} | {{ s.backend }} | {{ s.python_version or "-" }} | {{ s.exit_code if s.exit_code is not none else "-" }} | {{ "ok" if s.setup_ok else "**failed**" }} | {{ s.results | selectattr("outcome", "equalto", "passed") | list | length }}/{{ s.results | length }} passed | {% if s.junit_file %}[junit]({{ s.junit_file }}){% endif %}{% if s.log_file %} [log]({{ s.log_file }}){% endif %} |
+{% endfor %}
+
+{% for label, n, field in counts %}{{ "**" if n and field in ("newly_fixed", "regressions") }}{{ n }} {{ label }}{{ "**" if n and field in ("newly_fixed", "regressions") }}{{ " · " if not loop.last }}{% endfor %}
+
+
+| Test | Original | After swap | Change |
+| --- | --- | --- | --- |
+{% for t in tests %}
+| `{{ t.name | cell }}` | {{ t.control }} | {{ t.donor }} | {{ "**" ~ t.change ~ "**" if t.field in ("newly_fixed", "regressions") else t.change }}{{ ": " ~ t.message | cell if t.message }} |
+{% endfor %}
+
+## Compatibility gaps
+
+{% for g in gaps %}
+- `{{ g.tag }}` **{{ g.severity }}, {{ g.status }}**: {{ g.text }}{{ " Tests: " ~ g.tests | join(", ") ~ "." if g.tests }}{{ links(g.links) }}
+{% else %}
+- No gaps found.
+{% endfor %}
+
+## Suggested tests
+
+{% for t in suggested %}
+- `{{ t.tag }}` **{{ t.name }}**: {{ t.purpose }}{{ " (ran)" if t.ran else " (not run)" }}
+{% else %}
+- None suggested.
+{% endfor %}
+
+## Open concerns and limitations
+
+{% for r in concerns %}
+- {{ row(r) }}
+{% endfor %}
+
+Known limitations, the same in every capsule:
+
+{% for l in limitations %}
+- {{ l }}
+{% endfor %}
+
+## Replay
+
+Run `./replay.sh` in this folder to re-run both sides and check every test still matches. Add `--repo PATH` if the repo has moved.
+
+## Gemma 4
+
+{{ gemma.model_family }} ({{ gemma.models | join(", ") or "no models called" }}) accessed through {{ gemma.access }}. {{ gemma.calls }} API call(s), {{ gemma.cache_hits }} cache hit(s). Terms: {{ gemma.terms }}.
+{% if missing %}
+
+## Evidence check
+
+These files are cited above but are missing from this folder:
+
+{% for p in missing %}
+- `{{ p }}`
+{% endfor %}
+{% endif %}
