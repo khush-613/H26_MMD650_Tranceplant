@@ -1,0 +1,21 @@
+{
+ "gaps": [
+  {
+   "description": "pyproject.toml declares requires-python >=3.10, but tomllib only exists on Python 3.11+. On 3.10 linkwatch.config fails to import.",
+   "severity": "high",
+   "related_tests": [
+    "tests/test_config.py::test_sites_file_loads"
+   ]
+  }
+ ],
+ "concerns": [
+  "Raise requires-python to >=3.11, or fall back to tomli on 3.10."
+ ],
+ "suggested_tests": [
+  {
+   "name": "test_config_on_python_310",
+   "purpose": "Run test_config.py on Python 3.10 to prove the import works there",
+   "code": null
+  }
+ ]
+}

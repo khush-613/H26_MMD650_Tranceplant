@@ -1,0 +1,24 @@
+You are migrating a Python repository off "$package".
+
+Decision: $action -> $replacement (declare as: $target_spec)
+Why: $reasoning
+
+Repo Python version: $python_version
+requires-python: $requires_python
+
+Write the code changes as a list of edits. Rules:
+1. Each edit replaces one snippet in one file. "find" must be copied character for character from the file contents shown below, including indentation, and must appear exactly once in that file. Include a neighbouring line if needed to make it unique.
+2. Keep edits minimal. Do not reformat, reorder or rename anything unrelated to the migration.
+3. Update every place the dependency is declared (requirements files, pyproject.toml, Makefile, Dockerfile and so on) so they stay consistent with each other. For "stdlib" and "remove", delete the declaration.
+4. Keep the program's behaviour the same. Respect API differences (for example, file modes, renamed functions, changed defaults).
+5. Do not edit tests unless a test itself uses "$package".
+6. To create a new file, use an empty "find" and put the whole file in "replace".
+7. File paths are relative to the repository root, exactly as shown in the FILE headers.
+
+Steps: short, ordered, human-readable migration steps a reviewer can follow.
+
+Where the repository uses "$package" (observed by AST scan):
+$usages
+
+Repository files:
+$files

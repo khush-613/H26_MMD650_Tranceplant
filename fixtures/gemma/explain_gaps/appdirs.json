@@ -1,0 +1,21 @@
+{
+ "gaps": [
+  {
+   "description": "The README documents the Windows cache folder as %LOCALAPPDATA%\\linkwatch\\linkwatch\\Cache. platformdirs may resolve this differently, and the trial only ran on Linux, so the documented path is unverified.",
+   "severity": "medium",
+   "related_tests": [
+    "tests/test_cache.py::test_cache_round_trip"
+   ]
+  }
+ ],
+ "concerns": [
+  "test_cache_round_trip sets LINKWATCH_CACHE_DIR, so the real platform path is never exercised."
+ ],
+ "suggested_tests": [
+  {
+   "name": "test_default_cache_dir_matches_readme",
+   "purpose": "Unset LINKWATCH_CACHE_DIR and compare cache_dir() with the documented path per platform",
+   "code": null
+  }
+ ]
+}

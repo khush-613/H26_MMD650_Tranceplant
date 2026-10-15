@@ -1,0 +1,16 @@
+{
+ "action": "upgrade",
+ "replacement": "Jinja2",
+ "target_spec": "Jinja2>=3.1,<4",
+ "reasoning": "LinkWatch only uses Environment, FileSystemLoader and select_autoescape, which kept the same API in Jinja2 3.1. Upgrading pulls a compatible MarkupSafe and fixes the soft_unicode ImportError without changing any code.",
+ "alternatives": [
+  {
+   "name": "Pin MarkupSafe<2.1",
+   "why_not": "keeps an end-of-life Jinja2 and just hides the clash"
+  },
+  {
+   "name": "Mako",
+   "why_not": "would mean rewriting the template for no benefit"
+  }
+ ]
+}

@@ -1,0 +1,33 @@
+{
+ "steps": [
+  "Drop toml from requirements.txt and pyproject.toml",
+  "Import tomllib instead of toml in linkwatch/config.py",
+  "Open the sites file in binary mode, as tomllib.load requires"
+ ],
+ "edits": [
+  {
+   "file": "requirements.txt",
+   "find": "toml==0.10.2\n",
+   "replace": "",
+   "reason": "stdlib replacement"
+  },
+  {
+   "file": "pyproject.toml",
+   "find": "    \"toml==0.10.2\",\n",
+   "replace": "",
+   "reason": "stdlib replacement"
+  },
+  {
+   "file": "linkwatch/config.py",
+   "find": "import toml\n",
+   "replace": "import tomllib\n",
+   "reason": "use the stdlib parser"
+  },
+  {
+   "file": "linkwatch/config.py",
+   "find": "    data = toml.load(path)",
+   "replace": "    with open(path, \"rb\") as fh:\n        data = tomllib.load(fh)",
+   "reason": "tomllib needs a binary file"
+  }
+ ]
+}

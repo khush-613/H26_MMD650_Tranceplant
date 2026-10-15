@@ -1,0 +1,8 @@
+{
+ "summary": "This dependency is pinned to an old release and the repository's own checks show warning signs. Moving off it now is cheaper than fixing it under pressure later.",
+ "severity": "medium",
+ "key_factors": [
+  "old pin",
+  "maintenance status unclear"
+ ]
+}

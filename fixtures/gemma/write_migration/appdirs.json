@@ -1,0 +1,26 @@
+{
+ "steps": [
+  "Replace appdirs with platformdirs in requirements.txt and pyproject.toml",
+  "Import user_cache_dir from platformdirs in linkwatch/cache.py"
+ ],
+ "edits": [
+  {
+   "file": "requirements.txt",
+   "find": "appdirs==1.4.4",
+   "replace": "platformdirs>=4",
+   "reason": "maintained fork"
+  },
+  {
+   "file": "pyproject.toml",
+   "find": "    \"appdirs==1.4.4\",",
+   "replace": "    \"platformdirs>=4\",",
+   "reason": "keep declarations consistent"
+  },
+  {
+   "file": "linkwatch/cache.py",
+   "find": "from appdirs import user_cache_dir",
+   "replace": "from platformdirs import user_cache_dir",
+   "reason": "same function, maintained package"
+  }
+ ]
+}
